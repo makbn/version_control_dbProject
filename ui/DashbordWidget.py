@@ -51,7 +51,7 @@ class DashboardWidget(QtGui.QWidget):
         print(document.findAll("#repository_list").count())
         inner=""
         for num in range(21):
-            inner+=self.createRepositoryElement(self)
+          inner+=self.createRepositoryElement(self)
         document.findAll("#repository_list").at(0).setInnerXml(inner)
         self.view.show()
 
@@ -80,20 +80,29 @@ class DashboardWidget(QtGui.QWidget):
 
         innerHTML="""
         <div class="item" id={id}>
-            <i class="large git square icon"></i>
-            <div class="content" href="{url}">
-                <a class="header" href="{url}">{name}</a>
-                <div class="description">{description}</div>
-                <div style="display: inline-flex; margin-top: 10px">
-                    <div style="padding-left: 10px">
-                        <a class="ui {color} label">{availability}</a>
+        <i class="large git square icon"></i>
+        <div class="content container">
+            <a class="header" href="{url}">{name}</a>
+            <div class="description">{description}</div>
+            <div class="row" style="display: flex; margin-top: 10px">
+                <div class = "col-xs-3" style="padding-left: 2px">
+                    <a class="ui {color} label">{visibility}</a>
+                </div>
+                <div class = "col-xs-3" style="padding-left: 2px">
+                    <div class="ui label">
+                        <i class="star icon"></i> {starcount}
                     </div>
+                </div>
+
+                <div class = "col-xs-3" style="padding-left: 2px">
+                    <a class="ui blue label">makbn/Semantic...</a>
                 </div>
             </div>
         </div>
+    </div>
         <div></div>
         """
-        innerHTML=innerHTML.format(id=id, url="/" + repr(id), name=name, description=description, availability=availability,color="orange")
+        innerHTML=innerHTML.format(id=id, url="/" + repr(id),starcount=33, name=name, description=description, visibility=availability,color="orange")
         return innerHTML
 
     def handleLinkClicked(self, url):
