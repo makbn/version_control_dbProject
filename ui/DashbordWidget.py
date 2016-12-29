@@ -1,11 +1,12 @@
 import os
 from datetime import datetime
+from random import randint
 
 from PySide import *
 from PySide.QtCore import QUrl
 from PySide.QtGui import QListView, QStandardItemModel, QStandardItem, QListWidget, QListWidgetItem
 from PySide.QtWebKit import QWebView
-
+from models import Repository
 import MyWidgets
 
 PARTITION = 50
@@ -37,11 +38,13 @@ class DashboardWidget(QtGui.QWidget):
     def loadRepository(self):
         self.view = QWebView(self)
         self.view.linkClicked.connect(self.handleLinkClicked)
-        self.view.move(1,1)
         self.view.page().setLinkDelegationPolicy(
         QtWebKit.QWebPage.DelegateAllLinks)
-        self.view.setMinimumSize(self.WINDOW_WIDTH/2,PARTITION*11 + 10)
-        self.view.setMaximumSize(self.WINDOW_WIDTH/2,PARTITION*10 + 10)
+        self.view.move((self.WINDOW_WIDTH / 2) + 1, 1)
+        self.view.setMinimumSize((self.WINDOW_WIDTH / 2) - 2, PARTITION * 11 + 10)
+        self.view.setMaximumSize((self.WINDOW_WIDTH / 2) - 2, PARTITION * 10 + 10)
+
+
         cwd = os.getcwd()
         self.view.load(QUrl.fromLocalFile(os.path.join(cwd,"resource","RepositoryList.html")))
         self.WINDOW_PARENT.QApplicationRef.processEvents()
@@ -51,7 +54,7 @@ class DashboardWidget(QtGui.QWidget):
         print(document.findAll("#repository_list").count())
         inner=""
         for num in range(21):
-          inner+=self.createRepositoryElement(self)
+          inner+=self.createRepositoryElement(Repository.REPOSITORY_TEST)
         document.findAll("#repository_list").at(0).setInnerXml(inner)
         self.view.show()
 
@@ -60,23 +63,15 @@ class DashboardWidget(QtGui.QWidget):
         self.view1.linkClicked.connect(self.handleLinkClicked)
         self.view1.page().setLinkDelegationPolicy(
         QtWebKit.QWebPage.DelegateAllLinks)
-        self.view1.move((self.WINDOW_WIDTH/2)+1,1)
-        self.view1.setMinimumSize((self.WINDOW_WIDTH/2)-2,PARTITION*11 + 10)
-        self.view1.setMaximumSize((self.WINDOW_WIDTH/2)-2,PARTITION*10 + 10)
+        self.view1.move(1, 1)
+        self.view1.setMinimumSize(self.WINDOW_WIDTH / 2, PARTITION * 11 + 10)
+        self.view1.setMaximumSize(self.WINDOW_WIDTH / 2, PARTITION * 10 + 10)
         cwd = os.getcwd()
         self.view1.load(QUrl.fromLocalFile(os.path.join(cwd,"resource","Panel.html")))
         self.WINDOW_PARENT.QApplicationRef.processEvents()
         self.view1.show()
 
     def createRepositoryElement(self,repository):
-        # name=repository.getName()
-        # description=repository.getDesription()
-        # starCount=repository.getStar()
-        # availability=repository.getAvailability()
-        id=232
-        name="mehdi"
-        description="hahahahahahha"
-        availability="private"
 
         innerHTML="""
         <div class="item" id={id}>
@@ -102,7 +97,13 @@ class DashboardWidget(QtGui.QWidget):
     </div>
         <div></div>
         """
-        innerHTML=innerHTML.format(id=id, url="/" + repr(id),starcount=33, name=name, description=description, visibility=availability,color="orange")
+
+        visibility="public"
+        color="green"
+        if randint(0,9)%2==0:
+            visibility="private"
+            color="orange"
+        innerHTML=innerHTML.format(id=repository.id, url="/" + repr(repository.id),starcount=repository.getStarCount(), name=repository.name, description=repository.description, visibility=visibility,color=color)
         return innerHTML
 
     def handleLinkClicked(self, url):
