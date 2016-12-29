@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="author" content="Mehdi akbarian & Navid Alipur">
+
+    <title>Full Slider - Start Bootstrap Template</title>
+
+    <!-- Bootstrap Core CSS -->
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Custom CSS -->
+    <link href="css/full-slider.css" rel="stylesheet">
+
+    <script src="js/bootbox.min.js"></script>
+
+    <script type="text/javascript">
+        function login () {
+            var username=document.getElementById("username").value;
+            var password=document.getElementById("password").value;
+
+            document.getElementById("getusername").innerHTML=username;
+            document.getElementById("getpassword").innerHTML=password;
+        }
+    </script>
+    <script type="text/javascript">
+        function wrongPassword(){
+            toggle();
+            /*alert("baghbaghoo") ;*/
+            new function (){
+                bootbox.alert(
+                 "This alert can be dismissed by clicking on the background!"
+             );
+            }
+
+        }
+
+        function toggle(){
+            var x = document.getElementById('alert');
+            if (x.style.visibility === 'hidden') {
+                x.style.visibility = 'visible';
+            }else {
+                x.style.visibility = 'hidden';
+            }
+        }
+    </script>
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+    <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+
+
+
+
+    <![endif]-->
+
+</head>
+<body style="background: rgba(45,45,48,255)">
+    <div id="login-overlay">
+      <div>
+          <div class="modal-header">
+              <h4 class="modal-title" id="myModalLabel">Login to My DataBase project</h4>
+          </div>
+          <div class="modal-body" style="padding-top: 100px">
+              <div class="row">
+                  <div class="col-xs-6">
+                      <div class="well">
+                          <form id="loginForm" method="POST" action="/login/" novalidate="novalidate">
+                              <div class="form-group">
+                                  <label for="username" class="control-label">Username</label>
+                                  <input type="text" class="form-control" id="username" name="username" value="" required="true" title="Please enter you username" placeholder="email or username">
+                                  <span class="help-block"></span>
+                              </div>
+                              <div class="form-group">
+                                  <label for="password" class="control-label">Password</label>
+                                  <input type="password" class="form-control" id="password" name="password" value="" required="true" title="Please enter your password">
+                                  <span class="help-block"></span>
+                              </div>
+                              <div id="loginErrorMsg" class="alert alert-error hide">Wrong username og password</div>
+                              <a onclick="login()" href="/doLogin" class="btn btn-success btn-block">Login</a>
+                              <a onclick="wrongPassword()" href="/forgot" class="btn btn-default btn-block">Help to login</a>
+                          </form>
+                      </div>
+                  </div>
+                  <div class="col-xs-6">
+                      <p class="lead" style="color: white">Register now for <span class="text-success" style="color: rgba(29,185,84,255)">FREE</span></p>
+                      <ul class="list-unstyled" style="line-height: 2; color: white">
+                          <li><span class="fa fa-check text-success"></span> Includes Git repository management, issue tracking, code review</li>
+                          <li><span class="fa fa-check text-success"></span> Manage access and permissions</li>
+                          <li><span class="fa fa-check text-success"></span> Keep your documentation within the project</li>
+                          <li><span class="fa fa-check text-success"></span> Explore More Repositories</li>
+
+                      </ul>
+                      <p style="padding-top: 28px"><a href="/doSignup" class="btn btn-info btn-block">Yes please, register now!</a></p>
+                  </div>
+              </div>
+          </div>
+      </div>
+    </div>
+    <div  id="alert" style="padding: 16px; visibility: hidden">
+        <div  class="alert alert-danger">
+            <strong>Wrong Info!</strong> Can't remember your password? <a href="/forgot" class="text-warning">Click Here</a>.
+        </div>
+    </div>
+
+ <p class="getusername" id="getusername" hidden>This paragraph should be hidden.</p>
+ <p class="getpassword" id="getpassword" hidden>This paragraph should be hidden.</p>
+</body>
+</html>

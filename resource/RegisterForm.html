@@ -1,0 +1,765 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <link href="css/bootstrap.css" rel="stylesheet">
+    <link href="css/datepicker.css" rel="stylesheet">
+    <style>#alert {display: none;}</style>
+    <link href="css/prettify.css" rel="stylesheet">
+    <script src="js/prettify.js"></script>
+    <script src="js/jquery.js"></script>
+    <script src="js/bootstrap-datepicker.js"></script>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>Full Slider - Start Bootstrap Template</title>
+
+    <!-- Bootstrap Core CSS -->
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <link href="css/bootstrap.css" rel="stylesheet">
+    <link href="css/datepicker.css" rel="stylesheet">
+
+    <!-- Custom CSS -->
+    <link href="css/full-slider.css" rel="stylesheet">
+
+    <script src="js/jquery.js"></script>
+    <script src="js/bootstrap_datepicker.js"></script>
+
+     <script>
+		$(function(){
+			window.prettyPrint && prettyPrint();
+			$('#dp1').datepicker({
+				format: 'mm-dd-yyyy',
+                todayBtn: 'linked'
+			});
+
+			$('#dp2').datepicker();
+            $('#btn2').click(function(e){
+                e.stopPropagation();
+                $('#dp2').datepicker('update', '03/17/12');
+            });
+
+			$('#dp3').datepicker();
+
+            $('#btn6').click(function(){
+                $('#dp6').datepicker('update', '15-05-1984');
+            });
+
+            $('#btn7').click(function(){
+                $('#dp6').data('datepicker').date = null;
+                $('#dp6').find('.active').removeClass('active');
+            });
+		});
+        </script>
+        <script>
+            function toggle(){
+            var x = document.getElementById('alert');
+            if (x.style.visibility === 'hidden') {
+                x.style.visibility = 'visible';
+            }else {
+                x.style.visibility = 'hidden';
+            }
+        }
+        </script>
+
+    <script>
+        function onRegister(){
+            var Password=document.getElementById("password").value;
+            var username=document.getElementById("username").value;
+            var firstname=document.getElementById("firstname").value;
+            var lastname=document.getElementById("lastname").value;
+            var Bdate = document.getElementById("BirthDate").value;
+            var email = document.getElementById("youremail").value;
+            var isMale = document.getElementById("inlineCheckbox1").checked;
+            var isFemale = document.getElementById("inlineCheckbox2").checked;
+
+            if(isMale) document.getElementById("getGender").innerHTML = "Male"
+            else if (isFemale)document.getElementById("getGender").innerHTML = "Female"
+
+            document.getElementById("getUsername").innerHTML = username ;
+            document.getElementById("getFirstname").innerHTML = firstname;
+            document.getElementById("getLastname").innerHTML = lastname;
+            document.getElementById("getDate").innerHTML = Bdate;
+            document.getElementById("getPassword").innerHTML = Password;
+            document.getElementById("getEmail").innerHTML = email;
+
+        }
+    </script>
+
+</head>
+<body style="background-color: rgba(45,45,48,255)">
+
+<div class="modal-header">
+    <h4 class="modal-title" id="myModalLabel">Register to My DataBase project</h4>
+</div>
+
+<div class="" style="padding: 40px">
+
+
+    <div class="row" align="left">
+        <div class="col-xs-10 col-sm-12 col-md-11 well well-sm">
+            <legend><a href="http://www.jquery2dotnet.com"><i class="glyphicon glyphicon-user"></i></a> Sign up!
+            </legend>
+            <form action="#" method="post" class="form" role="form">
+                <div class="row">
+                    <div class="col-xs-6 col-md-6">
+                        <input class="form-control" id="firstname" placeholder="First Name" type="text"
+                               />
+                    </div>
+                    <div class="col-xs-6 col-md-6">
+                        <input class="form-control" id="lastname" placeholder="Last Name" type="text" />
+                    </div>
+                </div>
+                <div style="padding:5px"></div>
+                <input class="form-control" id="username" placeholder="Username" type="text" />
+                <div style="padding:5px"></div>
+                <input class="form-control" id="youremail" placeholder="Enter Your Email" type="text"/>
+                <div style="padding:5px"></div>
+                <input class="form-control" id="password" placeholder="New Password" type="password"/>
+                <label>Birth Date</label>
+                <div class="form-control" >
+                    <div>
+                        <div >
+                            <div>
+                                <section>
+                                    <div>
+                                        <div >
+                                            <div>
+                                                <div class="input-append date" id="dp3" data-date="12-02-2012"
+                                                     data-date-format="dd-mm-yyyy">
+                                                    <input id="BirthDate" class="span2" size="16" type="text" value="12-02-2012"
+                                                           readonly="">
+                                                    <span class="add-on"><i class="icon-th"></i></span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </section>
+                            </div>
+                            <div class="datepicker datepicker-dropdown dropdown-menu" style="display: none;">
+                                <div class="datepicker-days" style="display: block;">
+                                    <table class=" table-condensed">
+                                        <thead>
+                                        <tr>
+                                            <th class="prev" style="visibility: visible;"><i
+                                                    class="icon-arrow-left"></i></th>
+                                            <th colspan="5" class="switch">February 2012</th>
+                                            <th class="next" style="visibility: visible;"><i
+                                                    class="icon-arrow-right"></i></th>
+                                        </tr>
+                                        <tr>
+                                            <th class="dow">Su</th>
+                                            <th class="dow">Mo</th>
+                                            <th class="dow">Tu</th>
+                                            <th class="dow">We</th>
+                                            <th class="dow">Th</th>
+                                            <th class="dow">Fr</th>
+                                            <th class="dow">Sa</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        <tr>
+                                            <td class="day old">29</td>
+                                            <td class="day old">30</td>
+                                            <td class="day old">31</td>
+                                            <td class="day">1</td>
+                                            <td class="day">2</td>
+                                            <td class="day">3</td>
+                                            <td class="day">4</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="day">5</td>
+                                            <td class="day">6</td>
+                                            <td class="day">7</td>
+                                            <td class="day">8</td>
+                                            <td class="day">9</td>
+                                            <td class="day">10</td>
+                                            <td class="day">11</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="day">12</td>
+                                            <td class="day">13</td>
+                                            <td class="day">14</td>
+                                            <td class="day">15</td>
+                                            <td class="day active">16</td>
+                                            <td class="day">17</td>
+                                            <td class="day">18</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="day">19</td>
+                                            <td class="day">20</td>
+                                            <td class="day">21</td>
+                                            <td class="day">22</td>
+                                            <td class="day">23</td>
+                                            <td class="day">24</td>
+                                            <td class="day">25</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="day">26</td>
+                                            <td class="day">27</td>
+                                            <td class="day">28</td>
+                                            <td class="day">29</td>
+                                            <td class="day new">1</td>
+                                            <td class="day new">2</td>
+                                            <td class="day new">3</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="day new">4</td>
+                                            <td class="day new">5</td>
+                                            <td class="day new">6</td>
+                                            <td class="day new">7</td>
+                                            <td class="day new">8</td>
+                                            <td class="day new">9</td>
+                                            <td class="day new">10</td>
+                                        </tr>
+                                        </tbody>
+                                        <tfoot>
+                                        <tr>
+                                            <th colspan="7" class="today" style="display: none;">Today</th>
+                                        </tr>
+                                        </tfoot>
+                                    </table>
+                                </div>
+                                <div class="datepicker-months" style="display: none;">
+                                    <table class="table-condensed">
+                                        <thead>
+                                        <tr>
+                                            <th class="prev" style="visibility: visible;"><i
+                                                    class="icon-arrow-left"></i></th>
+                                            <th colspan="5" class="switch">2012</th>
+                                            <th class="next" style="visibility: visible;"><i
+                                                    class="icon-arrow-right"></i></th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        <tr>
+                                            <td colspan="7"><span class="month">Jan</span><span
+                                                    class="month active">Feb</span><span class="month">Mar</span><span
+                                                    class="month">Apr</span><span class="month">May</span><span
+                                                    class="month">Jun</span><span
+                                                    class="month">Jul</span><span class="month">Aug</span><span
+                                                    class="month">Sep</span><span
+                                                    class="month">Oct</span><span class="month">Nov</span><span
+                                                    class="month">Dec</span></td>
+                                        </tr>
+                                        </tbody>
+                                        <tfoot>
+                                        <tr>
+                                            <th colspan="7" class="today" style="display: none;">Today</th>
+                                        </tr>
+                                        </tfoot>
+                                    </table>
+                                </div>
+                                <div class="datepicker-years" style="display: none;">
+                                    <table class="table-condensed">
+                                        <thead>
+                                        <tr>
+                                            <th class="prev" style="visibility: visible;"><i
+                                                    class="icon-arrow-left"></i></th>
+                                            <th colspan="5" class="switch">2010-2019</th>
+                                            <th class="next" style="visibility: visible;"><i
+                                                    class="icon-arrow-right"></i></th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        <tr>
+                                            <td colspan="7"><span class="year old">2009</span><span
+                                                    class="year">2010</span><span
+                                                    class="year">2011</span><span class="year active">2012</span><span
+                                                    class="year">2013</span><span
+                                                    class="year">2014</span><span class="year">2015</span><span
+                                                    class="year">2016</span><span
+                                                    class="year">2017</span><span class="year">2018</span><span
+                                                    class="year">2019</span><span
+                                                    class="year old">2020</span></td>
+                                        </tr>
+                                        </tbody>
+                                        <tfoot>
+                                        <tr>
+                                            <th colspan="7" class="today" style="display: none;">Today</th>
+                                        </tr>
+                                        </tfoot>
+                                    </table>
+                                </div>
+                            </div>
+                            <div class="datepicker datepicker-dropdown dropdown-menu"
+                                 style="display: none; top: 493px; left: 885.109px; z-index: 10;">
+                                <div class="datepicker-days" style="display: block;">
+                                    <table class=" table-condensed">
+                                        <thead>
+                                        <tr>
+                                            <th class="prev" style="visibility: visible;"><i
+                                                    class="icon-arrow-left"></i></th>
+                                            <th colspan="5" class="switch">February 2012</th>
+                                            <th class="next" style="visibility: visible;"><i
+                                                    class="icon-arrow-right"></i></th>
+                                        </tr>
+                                        <tr>
+                                            <th class="dow">Su</th>
+                                            <th class="dow">Mo</th>
+                                            <th class="dow">Tu</th>
+                                            <th class="dow">We</th>
+                                            <th class="dow">Th</th>
+                                            <th class="dow">Fr</th>
+                                            <th class="dow">Sa</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        <tr>
+                                            <td class="day old">29</td>
+                                            <td class="day old">30</td>
+                                            <td class="day old">31</td>
+                                            <td class="day">1</td>
+                                            <td class="day">2</td>
+                                            <td class="day">3</td>
+                                            <td class="day">4</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="day">5</td>
+                                            <td class="day">6</td>
+                                            <td class="day">7</td>
+                                            <td class="day">8</td>
+                                            <td class="day">9</td>
+                                            <td class="day">10</td>
+                                            <td class="day">11</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="day active">12</td>
+                                            <td class="day">13</td>
+                                            <td class="day">14</td>
+                                            <td class="day">15</td>
+                                            <td class="day">16</td>
+                                            <td class="day">17</td>
+                                            <td class="day">18</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="day">19</td>
+                                            <td class="day">20</td>
+                                            <td class="day">21</td>
+                                            <td class="day">22</td>
+                                            <td class="day">23</td>
+                                            <td class="day">24</td>
+                                            <td class="day">25</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="day">26</td>
+                                            <td class="day">27</td>
+                                            <td class="day">28</td>
+                                            <td class="day">29</td>
+                                            <td class="day new">1</td>
+                                            <td class="day new">2</td>
+                                            <td class="day new">3</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="day new">4</td>
+                                            <td class="day new">5</td>
+                                            <td class="day new">6</td>
+                                            <td class="day new">7</td>
+                                            <td class="day new">8</td>
+                                            <td class="day new">9</td>
+                                            <td class="day new">10</td>
+                                        </tr>
+                                        </tbody>
+                                        <tfoot>
+                                        <tr>
+                                            <th colspan="7" class="today" style="display: none;">Today</th>
+                                        </tr>
+                                        </tfoot>
+                                    </table>
+                                </div>
+                                <div class="datepicker-months" style="display: none;">
+                                    <table class="table-condensed">
+                                        <thead>
+                                        <tr>
+                                            <th class="prev" style="visibility: visible;"><i
+                                                    class="icon-arrow-left"></i></th>
+                                            <th colspan="5" class="switch">2012</th>
+                                            <th class="next" style="visibility: visible;"><i
+                                                    class="icon-arrow-right"></i></th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        <tr>
+                                            <td colspan="7"><span class="month">Jan</span><span
+                                                    class="month active">Feb</span><span class="month">Mar</span><span
+                                                    class="month">Apr</span><span class="month">May</span><span
+                                                    class="month">Jun</span><span
+                                                    class="month">Jul</span><span class="month">Aug</span><span
+                                                    class="month">Sep</span><span
+                                                    class="month">Oct</span><span class="month">Nov</span><span
+                                                    class="month">Dec</span></td>
+                                        </tr>
+                                        </tbody>
+                                        <tfoot>
+                                        <tr>
+                                            <th colspan="7" class="today" style="display: none;">Today</th>
+                                        </tr>
+                                        </tfoot>
+                                    </table>
+                                </div>
+                                <div class="datepicker-years" style="display: none;">
+                                    <table class="table-condensed">
+                                        <thead>
+                                        <tr>
+                                            <th class="prev" style="visibility: visible;"><i
+                                                    class="icon-arrow-left"></i></th>
+                                            <th colspan="5" class="switch">2010-2019</th>
+                                            <th class="next" style="visibility: visible;"><i
+                                                    class="icon-arrow-right"></i></th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        <tr>
+                                            <td colspan="7"><span class="year old">2009</span><span
+                                                    class="year">2010</span><span
+                                                    class="year">2011</span><span class="year active">2012</span><span
+                                                    class="year">2013</span><span
+                                                    class="year">2014</span><span class="year">2015</span><span
+                                                    class="year">2016</span><span
+                                                    class="year">2017</span><span class="year">2018</span><span
+                                                    class="year">2019</span><span
+                                                    class="year old">2020</span></td>
+                                        </tr>
+                                        </tbody>
+                                        <tfoot>
+                                        <tr>
+                                            <th colspan="7" class="today" style="display: none;">Today</th>
+                                        </tr>
+                                        </tfoot>
+                                    </table>
+                                </div>
+                            </div>
+                            <div class="datepicker datepicker-dropdown dropdown-menu" style="display: none;">
+                                <div class="datepicker-days" style="display: block;">
+                                    <table class=" table-condensed">
+                                        <thead>
+                                        <tr>
+                                            <th class="prev" style="visibility: visible;"><i
+                                                    class="icon-arrow-left"></i></th>
+                                            <th colspan="5" class="switch">February 2012</th>
+                                            <th class="next" style="visibility: visible;"><i
+                                                    class="icon-arrow-right"></i></th>
+                                        </tr>
+                                        <tr>
+                                            <th class="dow">Su</th>
+                                            <th class="dow">Mo</th>
+                                            <th class="dow">Tu</th>
+                                            <th class="dow">We</th>
+                                            <th class="dow">Th</th>
+                                            <th class="dow">Fr</th>
+                                            <th class="dow">Sa</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        <tr>
+                                            <td class="day old">29</td>
+                                            <td class="day old">30</td>
+                                            <td class="day old">31</td>
+                                            <td class="day">1</td>
+                                            <td class="day">2</td>
+                                            <td class="day">3</td>
+                                            <td class="day">4</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="day">5</td>
+                                            <td class="day">6</td>
+                                            <td class="day">7</td>
+                                            <td class="day">8</td>
+                                            <td class="day">9</td>
+                                            <td class="day">10</td>
+                                            <td class="day">11</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="day">12</td>
+                                            <td class="day">13</td>
+                                            <td class="day">14</td>
+                                            <td class="day">15</td>
+                                            <td class="day">16</td>
+                                            <td class="day">17</td>
+                                            <td class="day">18</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="day">19</td>
+                                            <td class="day active">20</td>
+                                            <td class="day">21</td>
+                                            <td class="day">22</td>
+                                            <td class="day">23</td>
+                                            <td class="day">24</td>
+                                            <td class="day">25</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="day">26</td>
+                                            <td class="day">27</td>
+                                            <td class="day">28</td>
+                                            <td class="day">29</td>
+                                            <td class="day new">1</td>
+                                            <td class="day new">2</td>
+                                            <td class="day new">3</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="day new">4</td>
+                                            <td class="day new">5</td>
+                                            <td class="day new">6</td>
+                                            <td class="day new">7</td>
+                                            <td class="day new">8</td>
+                                            <td class="day new">9</td>
+                                            <td class="day new">10</td>
+                                        </tr>
+                                        </tbody>
+                                        <tfoot>
+                                        <tr>
+                                            <th colspan="7" class="today" style="display: none;">Today</th>
+                                        </tr>
+                                        </tfoot>
+                                    </table>
+                                </div>
+                                <div class="datepicker-months" style="display: none;">
+                                    <table class="table-condensed">
+                                        <thead>
+                                        <tr>
+                                            <th class="prev" style="visibility: visible;"><i
+                                                    class="icon-arrow-left"></i></th>
+                                            <th colspan="5" class="switch">2012</th>
+                                            <th class="next" style="visibility: visible;"><i
+                                                    class="icon-arrow-right"></i></th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        <tr>
+                                            <td colspan="7"><span class="month">Jan</span><span
+                                                    class="month active">Feb</span><span class="month">Mar</span><span
+                                                    class="month">Apr</span><span class="month">May</span><span
+                                                    class="month">Jun</span><span
+                                                    class="month">Jul</span><span class="month">Aug</span><span
+                                                    class="month">Sep</span><span
+                                                    class="month">Oct</span><span class="month">Nov</span><span
+                                                    class="month">Dec</span></td>
+                                        </tr>
+                                        </tbody>
+                                        <tfoot>
+                                        <tr>
+                                            <th colspan="7" class="today" style="display: none;">Today</th>
+                                        </tr>
+                                        </tfoot>
+                                    </table>
+                                </div>
+                                <div class="datepicker-years" style="display: none;">
+                                    <table class="table-condensed">
+                                        <thead>
+                                        <tr>
+                                            <th class="prev" style="visibility: visible;"><i
+                                                    class="icon-arrow-left"></i></th>
+                                            <th colspan="5" class="switch">2010-2019</th>
+                                            <th class="next" style="visibility: visible;"><i
+                                                    class="icon-arrow-right"></i></th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        <tr>
+                                            <td colspan="7"><span class="year old">2009</span><span
+                                                    class="year">2010</span><span
+                                                    class="year">2011</span><span class="year active">2012</span><span
+                                                    class="year">2013</span><span
+                                                    class="year">2014</span><span class="year">2015</span><span
+                                                    class="year">2016</span><span
+                                                    class="year">2017</span><span class="year">2018</span><span
+                                                    class="year">2019</span><span
+                                                    class="year old">2020</span></td>
+                                        </tr>
+                                        </tbody>
+                                        <tfoot>
+                                        <tr>
+                                            <th colspan="7" class="today" style="display: none;">Today</th>
+                                        </tr>
+                                        </tfoot>
+                                    </table>
+                                </div>
+                            </div>
+                            <div class="datepicker datepicker-dropdown dropdown-menu" style="display: none;">
+                                <div class="datepicker-days" style="display: block;">
+                                    <table class=" table-condensed">
+                                        <thead>
+                                        <tr>
+                                            <th class="prev" style="visibility: visible;"><i
+                                                    class="icon-arrow-left"></i></th>
+                                            <th colspan="5" class="switch">February 2012</th>
+                                            <th class="next" style="visibility: visible;"><i
+                                                    class="icon-arrow-right"></i></th>
+                                        </tr>
+                                        <tr>
+                                            <th class="dow">Su</th>
+                                            <th class="dow">Mo</th>
+                                            <th class="dow">Tu</th>
+                                            <th class="dow">We</th>
+                                            <th class="dow">Th</th>
+                                            <th class="dow">Fr</th>
+                                            <th class="dow">Sa</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        <tr>
+                                            <td class="day old">29</td>
+                                            <td class="day old">30</td>
+                                            <td class="day old">31</td>
+                                            <td class="day">1</td>
+                                            <td class="day">2</td>
+                                            <td class="day">3</td>
+                                            <td class="day">4</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="day">5</td>
+                                            <td class="day">6</td>
+                                            <td class="day">7</td>
+                                            <td class="day">8</td>
+                                            <td class="day">9</td>
+                                            <td class="day">10</td>
+                                            <td class="day">11</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="day">12</td>
+                                            <td class="day">13</td>
+                                            <td class="day">14</td>
+                                            <td class="day">15</td>
+                                            <td class="day">16</td>
+                                            <td class="day">17</td>
+                                            <td class="day">18</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="day">19</td>
+                                            <td class="day">20</td>
+                                            <td class="day">21</td>
+                                            <td class="day">22</td>
+                                            <td class="day">23</td>
+                                            <td class="day">24</td>
+                                            <td class="day active">25</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="day">26</td>
+                                            <td class="day">27</td>
+                                            <td class="day">28</td>
+                                            <td class="day">29</td>
+                                            <td class="day new">1</td>
+                                            <td class="day new">2</td>
+                                            <td class="day new">3</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="day new">4</td>
+                                            <td class="day new">5</td>
+                                            <td class="day new">6</td>
+                                            <td class="day new">7</td>
+                                            <td class="day new">8</td>
+                                            <td class="day new">9</td>
+                                            <td class="day new">10</td>
+                                        </tr>
+                                        </tbody>
+                                        <tfoot>
+                                        <tr>
+                                            <th colspan="7" class="today" style="display: none;">Today</th>
+                                        </tr>
+                                        </tfoot>
+                                    </table>
+                                </div>
+                                <div class="datepicker-months" style="display: none;">
+                                    <table class="table-condensed">
+                                        <thead>
+                                        <tr>
+                                            <th class="prev" style="visibility: visible;"><i
+                                                    class="icon-arrow-left"></i></th>
+                                            <th colspan="5" class="switch">2012</th>
+                                            <th class="next" style="visibility: visible;"><i
+                                                    class="icon-arrow-right"></i></th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        <tr>
+                                            <td colspan="7"><span class="month">Jan</span><span
+                                                    class="month active">Feb</span><span class="month">Mar</span><span
+                                                    class="month">Apr</span><span class="month">May</span><span
+                                                    class="month">Jun</span><span
+                                                    class="month">Jul</span><span class="month">Aug</span><span
+                                                    class="month">Sep</span><span
+                                                    class="month">Oct</span><span class="month">Nov</span><span
+                                                    class="month">Dec</span></td>
+                                        </tr>
+                                        </tbody>
+                                        <tfoot>
+                                        <tr>
+                                            <th colspan="7" class="today" style="display: none;">Today</th>
+                                        </tr>
+                                        </tfoot>
+                                    </table>
+                                </div>
+                                <div class="datepicker-years" style="display: none;">
+                                    <table class="table-condensed">
+                                        <thead>
+                                        <tr>
+                                            <th class="prev" style="visibility: visible;"><i
+                                                    class="icon-arrow-left"></i></th>
+                                            <th colspan="5" class="switch">2010-2019</th>
+                                            <th class="next" style="visibility: visible;"><i
+                                                    class="icon-arrow-right"></i></th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        <tr>
+                                            <td colspan="7"><span class="year old">2009</span><span
+                                                    class="year">2010</span><span
+                                                    class="year">2011</span><span class="year active">2012</span><span
+                                                    class="year">2013</span><span
+                                                    class="year">2014</span><span class="year">2015</span><span
+                                                    class="year">2016</span><span
+                                                    class="year">2017</span><span class="year">2018</span><span
+                                                    class="year">2019</span><span
+                                                    class="year old">2020</span></td>
+                                        </tr>
+                                        </tbody>
+                                        <tfoot>
+                                        <tr>
+                                            <th colspan="7" class="today" style="display: none;">Today</th>
+                                        </tr>
+                                        </tfoot>
+                                    </table>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+                <label class="radio-inline">
+                    <input type="radio" name="sex" id="inlineCheckbox1" value="male"/>
+                    Male
+                </label>
+                <label class="radio-inline">
+                    <input type="radio" name="sex" id="inlineCheckbox2" value="female"/>
+                    Female
+                </label>
+                <br/>
+                <br/>
+                <a onclick="onRegister()" href="/doRegister" class="btn btn-success btn-block">SignUp</a>
+            </form>
+        </div>
+
+
+    </div>
+    </div>
+    <div  id="alert" style="padding: 16px; visibility: hidden">
+        <div  class="alert alert-danger">
+            <strong>Wrong Info!</strong> Can't remember your password? <a href="/forgot" class="text-warning">Click Here</a>.
+        </div>
+    </div>
+
+
+    <p class="getEmail" id="getEmail" hidden>Email Hidden.</p>
+    <p class="getLastname" id="getLastname" hidden>Lastname Hidden.</p>
+    <p class="getFirstname" id="getFirstname" hidden>fistname Hidden.</p>
+    <p class="getUsername" id="getUsername" hidden>username Hidden.</p>
+    <p class="getPassword" id="getPassword" hidden>password Hidden.</p>
+    <p Class="getDate" id="getDate" hidden>date Hidden.</p>
+    <p Class="getGender" id="getGender" hidden>Gender Hidden.</p>
+
+
+</body>
+</html>
