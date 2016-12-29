@@ -32,13 +32,14 @@ class RegisterPage(QtGui.QWidget):
 
     def loadSplash(self):
         self.view = QWebView(self)
+        #self.view.webkit.page().userAgentForUrl = "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:37.0) Gecko/20100101 Firefox/37.0"
         self.view.linkClicked.connect(self.handleLinkClicked)
         self.page =self.view.page()
         self.view.setMinimumSize(self.WINDOW_WIDTH,PARTITION*11 + 10)
         self.view.setMaximumSize(self.WINDOW_WIDTH,PARTITION*10 + 10)
         self.view.page().setLinkDelegationPolicy(QtWebKit.QWebPage.DelegateAllLinks)
         cwd = os.getcwd()
-        self.view.load(QUrl.fromLocalFile(os.path.join(cwd,"resource","RegisterForm.html")))
+        self.view.load(QUrl.fromLocalFile(os.path.join(cwd,"resource","SlideMenu.html")))
         self.WINDOW_PARENT.QApplicationRef.processEvents()
 
         frame = self.view.page().mainFrame()
