@@ -39,7 +39,7 @@ class RegisterPage(QtGui.QWidget):
         self.view.setMaximumSize(self.WINDOW_WIDTH,PARTITION*10 + 10)
         self.view.page().setLinkDelegationPolicy(QtWebKit.QWebPage.DelegateAllLinks)
         cwd = os.getcwd()
-        self.view.load(QUrl.fromLocalFile(os.path.join(cwd,"resource","SlideMenu.html")))
+        self.view.load(QUrl.fromLocalFile(os.path.join(cwd,"resource","RegisterForm.html")))
         self.WINDOW_PARENT.QApplicationRef.processEvents()
 
         frame = self.view.page().mainFrame()

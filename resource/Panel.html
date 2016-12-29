@@ -13,29 +13,50 @@
 
     <!-- Custom CSS -->
     <link href="css/semantic.css" rel="stylesheet">
-    <link href="css/scrollbar.css" rel="stylesheet">
+    <link href="css/SlideMenu.css" rel="stylesheet">
     <link href="css/icon.css" rel="stylesheet">
+    <script src="js/jquery.js"></script>
+    <script src="js/BigSlide.js"></script>
+    <script>
+    $(document).ready(function() {
+        $('.panel').bigSlide();
+    });
+    </script>
 
 </head>
 
-<body style="background: #2d2d30;padding: 2px">
-    <nav class="navbar navbar-default navbar-fixed-top">
-      <div class="container">
-        <div class="navbar-header">
+<body style="background: #2d2d30;">
 
-          <a class="navbar-brand" href="/hiii"></a>
-        </div>
-      </div>
-    </nav>
-</div>
+    <div id="menu" class="panel" role="navigation" style="position: fixed; top: 0px; bottom: 0px; height: 100%; left: -15.625em; width: 15.625em; transition: left 300ms ease 0s;">
+        <h4 style="align-content: center;text-align: center;color: #1aa62a">Notifications </h4>
+        <ul>
+            <li><a href="https://github.com/ascott1/bigSlide.js"><span class="icon-github nav-icon"></span>Github</a></li>
+            <li><a href="https://raw.github.com/ascott1/bigSlide.js/master/dist/bigSlide.min.js"><span class="icon-download nav-icon"></span>Compressed </a></li>
+            <li><a href="https://raw.github.com/ascott1/bigSlide.js/master/dist/bigSlide.js"><span class="icon-download nav-icon"></span>Uncompressed</a></li>
+            <li><a href="#how"><span class="icon-book nav-icon"></span>How to</a></li>
+            <li><a href="#options"><span class="icon-cog nav-icon"></span>Options</a></li>
+        </ul>
+    </div>
 
-    <!-- jQuery -->
-    <script src="js/jquery.js"></script>
+    <div class="masthead">
+        <div class="wrap push" style="left: 0px; transition: left 300ms ease 0s;">
 
-    <!-- Bootstrap Core JavaScript -->
-    <script src="js/bootstrap.min.js"></script>
+            <a href="#menu" class="menu-link">☰</a>
 
 
+
+
+        </div> <!-- /.wrap -->
+    </div> <!-- /.masthead-->
+
+
+    <script src="bower_components/jquery/jquery.min.js"></script>
+    <script src="js/bigSlide.js"></script>
+    <script>
+        $(document).ready(function() {
+            $('.menu-link').bigSlide();
+        });
+    </script>
 
 </body>
 
