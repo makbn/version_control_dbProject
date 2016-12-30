@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <script>
+        function Search(){
+            var searchQuery1 = document.getElementById("SearchQuery").value;
+            document.getElementById("getSearchQuery").innerHTML = searchQuery1;
+        }
+    </script>
+</head>
+<body style="background-color:rgba(45,45,48,255)">
+<div class="container">
+    <form class="row" action="/search" class="search_repos" id="search_form">
+        <h2 style="color:whitesmoke">Search</h2>
+        <div id="custom-search-input">
+            <div class="input-group col-md-12">
+                <input id="SearchQuery" type="text" class="  search-query form-control" placeholder="Search"/>
+                <span class="input-group-btn">
+                                    <a href="/DoSearch" onclick="Search()" class="btn btn-success" type="button">
+                                        <span class=" glyphicon glyphicon-search"></span>
+                                    </a>
+                </span>
+            </div>
+        </div>
+    </form>
+</div>
+
+<div class="container" style="padding-top: 40px">
+    <div class="columns">
+        <div class="col-xs-3 col-sm-3 col-md-3 well well-sm">
+            <nav class="menu">
+                <ul class="list-group">Filter
+
+                    <li class="list-group-item " style="margin-outside: 1px">
+                        <span class="glyphicon glyphicon-tasks"></span>
+                        <a href="/filterRepo">Repositories:</a>
+                        <span id="RepoCounter" style="float:right">10</span>
+                    </li>
+
+                    <li class="list-group-item" style="margin-outside: 1px">
+                        <span class="glyphicon glyphicon-pushpin"></span>
+                        <a href="/filterIssue">Issues:</a>
+                        <span id="IssueCounter" style="float:right">10</span>
+                    </li>
+
+                    <li class="list-group-item" style="margin-outside: 1px">
+                        <span class="glyphicon glyphicon-user"></span>
+                        <a href="/filterUser">Users:</a>
+                        <span id="UserCounter" style="float:right">120</span>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+        <div class="col-xs-8 col-sm-8 col-md-8" style="padding: 10px ; margin-left: 2px">
+            <div style="font-size: 30px ; color: rgba(29,185,84,255)">
+                Search Result :
+                <hr></hr>
+            </div>
+            <div id="SearchResultList">
+                <div class="searchResult" style="color: whitesmoke;">
+                    Project Name :
+                    <a href="Repository/id" class="Project-Name" style="margin: 5px">My Project Name</a>
+                    <br>
+                    User :
+                    <a href="UserProfile/id" class="Username" style="margin: 5px">My User Name</a>
+                    <hr></hr>
+                </div>
+            </div>
+        </div>
+
+
+    </div>
+    <div id="getSearchQuery" hidden>
+        Search Query must be Hidden
+    </div>
+
+</div>
+
+</body>
+</html>
