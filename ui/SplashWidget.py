@@ -45,8 +45,8 @@ class SplashWidget(QtGui.QWidget):
 
         self.background=MyWidgets.createBackground(self)
         self.loadSplash()
-        signup=MyWidgets.createPushButton("SignUp",self,(self.WINDOW_WIDTH/2)-100,self.WINDOW_HEIGHT/10,self.doSignup)
-        login=MyWidgets.createPushButton("Sign In",self,(self.WINDOW_WIDTH/2)+10,self.WINDOW_HEIGHT/10,self.doLogin)
+        signup=MyWidgets.createPushButton("SignUp",self,(self.WINDOW_WIDTH/2)-100,self.WINDOW_HEIGHT/2 -30,self.doSignup)
+        login=MyWidgets.createPushButton("Sign In",self,(self.WINDOW_WIDTH/2)+10,self.WINDOW_HEIGHT/2 -30,self.doLogin)
         dvider = MyWidgets.createLableColered(self,0,PARTITION*11 +10,self.WINDOW_WIDTH,100,"rgba(29,185,84,255)")
         footer = MyWidgets.createTextLable(self.WINDOW_FOOTER_MESSAGE, self,PARTITION*1, PARTITION*11 +15, "white", "5")
         close=MyWidgets.createBorderLessButton("EXIT",self,710,0,self.WINDOW_PARENT.quit)
