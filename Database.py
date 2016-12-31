@@ -76,6 +76,19 @@ class DatabaseMiddleWare(object):
             return True
         dbcur.close()
         return False
+    @staticmethod
+    def recoverPassword(qNumber,answer,email):
+        query="SELECT * FROM user WHERE user.email="+email
+        dbcur = DatabaseMiddleWare.dbRef.cursor(DatabaseMiddleWare.curType)
+        dbcur.execute(query)
+        if dbcur.fetchone()[0]['question_number']==qNumber:
+            if dbcur.fetchone()[0]['answer']==answer:
+                return dbcur.fetchone()[0]['password'];
+            else:
+                return "wrong answer dude!"
+        else:
+            return "wrong question dude!"
+
 
     def createTable(self, tableName):
         cur = DatabaseMiddleWare.dbRef.cursor(DatabaseMiddleWare.curType)

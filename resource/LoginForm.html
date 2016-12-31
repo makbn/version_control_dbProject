@@ -22,14 +22,14 @@
         function login () {
             var username=document.getElementById("username").value;
             var password=document.getElementById("password").value;
-
+            hide();
             document.getElementById("getusername").innerHTML=username;
             document.getElementById("getpassword").innerHTML=password;
         }
     </script>
     <script type="text/javascript">
         function wrongPassword(){
-            toggle();
+            show();
             /*alert("baghbaghoo") ;*/
             new function (){
                 bootbox.alert(
@@ -39,13 +39,14 @@
 
         }
 
-        function toggle(){
+        function hide(){
             var x = document.getElementById('alert');
-            if (x.style.visibility === 'hidden') {
-                x.style.visibility = 'visible';
-            }else {
-                x.style.visibility = 'hidden';
-            }
+            x.style.visibility = 'hidden';
+        }
+
+        function show(){
+            var x = document.getElementById('alert');
+            x.style.visibility = 'visible';
         }
     </script>
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
