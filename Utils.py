@@ -1,3 +1,5 @@
+from models import  User
+
 
 class UIHelper:
     @staticmethod
@@ -17,4 +19,4 @@ class UIHelper:
 class UserManager:
     @staticmethod
     def getCurrentUser():
-        return None
+        return User.USER_TEST
