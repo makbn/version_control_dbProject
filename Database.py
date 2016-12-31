@@ -178,7 +178,8 @@ class DatabaseMiddleWare(object):
         statement = statement[:-5]
         query = "SELECT * FROM " + tableName + " WHERE " + statement
         cur.execute(query)
-        return cur.fetchone
+        return cur.fetchall()
+
 
     @staticmethod
     def createRepository(repositoryName, user_id, description, is_private):
