@@ -11,7 +11,7 @@ import MyWidgets
 
 PARTITION = 50
 image_size = 64
-
+BACK_WIDGET=None
 class DashboardWidget(QtGui.QWidget):
     WINDOW_WIDTH= 800
     WINDOW_HEIGHT=600

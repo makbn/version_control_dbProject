@@ -4,6 +4,7 @@ import sys
 from PySide.QtWebKit import QWebView, QWebPage
 
 import MyWidgets
+import Utils
 from ui import MainWidget
 from PySide.QtCore import *
 from PySide.QtGui import *
@@ -13,7 +14,7 @@ from Database import DatabaseMiddleWare
 
 PARTITION = 50
 image_size = 64
-
+BACK_WIDGET=None
 class NewLoginWidget(QtGui.QWidget):
     WINDOW_WIDTH= 800
     WINDOW_HEIGHT=600
@@ -49,6 +50,7 @@ class NewLoginWidget(QtGui.QWidget):
         dvider = MyWidgets.createLableColered(self,0,PARTITION*11 +10,self.WINDOW_WIDTH,100,"rgba(29,185,84,255)")
         footer = MyWidgets.createTextLable(self.WINDOW_FOOTER_MESSAGE, self,PARTITION*1, PARTITION*11 +15, "white", "5")
         close=MyWidgets.createBorderLessButton("EXIT",self,710,0,self.WINDOW_PARENT.quit)
+        close = MyWidgets.createBorderLessButton("BACK", self, 630, 0, self.back)
 
     def handleLinkClicked(self, url):
         action=url.toString()
@@ -85,10 +87,9 @@ class NewLoginWidget(QtGui.QWidget):
         print("LOL!")
         frame = self.view.page().mainFrame()
 
-
-
-
-
-
     def signup(self):
         print("signup")
+
+    def back(self):
+        back=Utils.UIHelper.backPressHandler(BACK_WIDGET,self.WINDOW_PARENT)
+        self.WINDOW_PARENT.setCentralWidget(back)

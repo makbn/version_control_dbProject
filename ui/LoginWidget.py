@@ -6,6 +6,7 @@ from PySide.QtGui import *
 from PySide.QtDeclarative import *
 from PySide import *
 from Database import DatabaseMiddleWare
+from ui import RegisterPage
 
 PARTITION = 50
 image_size = 64
@@ -20,11 +21,12 @@ class LoginWidget(QtGui.QWidget):
     WINDOW_USERNAM_TITLE="Username :"
     WINDOW_PARENT=None
 
-    def __init__(self, parent=None):
+    def __init__(self, backWidget, parent=None):
         super(LoginWidget, self).__init__(parent)
         self.WINDOW_PARENT=parent
         self.layout = QtGui.QHBoxLayout()
         self.addWidgets()
+        self.backWidget=backWidget
 
     def addWidgets(self):
 
@@ -85,12 +87,9 @@ class LoginWidget(QtGui.QWidget):
                 else :
                     print("Username or Password is incorrect!!!")
 
-
-
-
-
-
-
-
     def signup(self):
-        print("signup")
+        signUp = RegisterPage.RegisterPage(self,self)
+        self.WINDOW_PARENT.setCentralWidget(signUp)
+
+    def back(self):
+        self.WINDOW_PARENT.setCentralWidget(self.backWidget)

@@ -2,7 +2,6 @@ import sys
 import MyWidgets
 from PySide.QtCore import *
 from PySide.QtGui import *
-from ui import LoginWidget
 from ui import NewLogin
 from ui import SplashWidget
 from ui import DashbordWidget
@@ -30,8 +29,8 @@ class MainWindow(QtGui.QMainWindow):
 
 
 
-        #splash_widget=SplashWidget.SplashWidget(self)
-        splash_widget=DashbordWidget.DashboardWidget(self)
+        splash_widget=SplashWidget.SplashWidget(self)
+        #splash_widget=DashbordWidget.DashboardWidget(self)
         self.central_widget.addWidget(splash_widget)
         #self.setWindowTitle(self.WINDOW_TITLE)
         self.setMinimumSize(self.WINDOW_WIDTH,self.WINDOW_HEIGHT)
@@ -45,6 +44,8 @@ class MainWindow(QtGui.QMainWindow):
 
     def quit(self):
         app.quit()
+
+
 
 
 
