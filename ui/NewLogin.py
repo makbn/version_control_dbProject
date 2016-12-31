@@ -88,7 +88,10 @@ class NewLoginWidget(QtGui.QWidget):
         frame = self.view.page().mainFrame()
 
     def signup(self):
-        print("signup")
+        from ui import RegisterPage
+        signup = RegisterPage.RegisterPage(self.WINDOW_PARENT)
+        RegisterPage.BACK_WIDGET = "NewLoginWidget"
+        self.WINDOW_PARENT.setCentralWidget(signup)
 
     def back(self):
         back=Utils.UIHelper.backPressHandler(BACK_WIDGET,self.WINDOW_PARENT)

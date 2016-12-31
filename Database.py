@@ -83,13 +83,13 @@ class DatabaseMiddleWare(object):
             'user': "CREATE TABLE  user ("
                     "id int PRIMARY KEY,"
                     "username VARCHAR (20) UNIQUE NOT NULL,"
-                    "password VARCHAR (20) NOT NULL,"
+                    "password VARCHAR (20) NOT NULL CHECK (LEN(password)>7),"
                     "email VARCHAR (100) UNIQUE NOT NULL,"
                     "first_name VARCHAR (25) NOT NULL,"
                     "last_name VARCHAR (45) NOT NULL,"
                     "gender INT(1) DEFAULT 1 NOT NULL,"
-                    "anser_number INT(1) NOT NULL,"
-                    "birthday DATE);",
+                    "question_number INT(1) NOT NULL,"
+                    "answer VARCHAR (150) NOT NULL);",
 
             'repository': "CREATE TABLE repository ("
                           "id int PRIMARY KEY,"
@@ -200,4 +200,64 @@ class DatabaseMiddleWare(object):
     def register(user):
         pass
 
+
+    def triggers(self):
+        triggers ={
+            "deleteIssues" : "CREATE TRIGGER dltIssue"
+                             "AFTER DELETE ON repository"
+                             "FOR EACH ROW"
+                             "BEGIN"
+                             "DELETE FROM issue WHERE issue.rep_id=repository.id;"
+                             "END",
+
+            "deleteAnswers" : "CREATE TRIGGER dltAnswer"
+                              "AFTER DELETE ON issue"
+                              "FOR EACH ROW"
+                              "BEGIN"
+                              "DELETE FROM answer WHERE answer.issue_id=issue.id;"
+                              "END",
+
+            "deleteStar" : "CREATE TRIGGER dltStar"
+                           "AFTER DELETE ON repository"
+                           "FOR EACH ROW"
+                           "BEGIN"
+                           "DELETE FROM star WHERE star.rep_id=repository.id;"
+                           "END",
+
+            "deleteStarUser" :  "CREATE TRIGGER dltStarUser"
+                                "AFTER DELETE ON user AS u"
+                                "FOR EACH ROW"
+                                "BEGIN"
+                                "DELETE FROM star WHERE star.user_id=u.id;"
+                                "END",
+            "createForkNotif" : "CREATE TRIGGER forkNotification"
+                                "AFTER INSERT ON repository AS r"
+                                "IF r.is_forked==1"
+                                "BEGIN"
+                                "INSERT INTO notification(user_id,title,description,link_id,link_type,is_read)"
+                                "VALUES (SELECT id FROM user u WHERE u.id="
+                                "(SELECT user_id FROM repository WHERE repository.id=r.source_id),"
+                                "r.repo_name,CONCAT('forked by',(SELECT username FROM user WHERE user.id=r.user_id))"
+                                ",r.id,'FORK',0);"
+                                "END ",
+            "createStarNotif" : "CREATE TRIGGER starNotification"
+                                "AFTER INSERT ON star As s"
+                                "FOR EACH ROW"
+                                "BEGIN"
+                                "INSERT INTO notification (user_id,title,description,link_id,link_type,is_read)"
+                                "VALUES (SELECT user_id FROM repository r WHERE r.id=s.rep_id,"
+                                "(SELECT repo_name FROM repository r WHERE r.id=s.rep_id ),"
+                                "CONCAT('+1 for',SELECT name FROM repository r WHERE r.id=s.rep_id ),s.rep_id,'STAR',0);"
+                                "END",
+
+            "createWatchNotif" : "CREATE TRIGGER watchNotification"
+                                 "AFTER INSERT ON watch As w"
+                                 "FOR EACH ROW"
+                                 "BEGIN"
+                                 "INSERT INTO notification (user_id,title,description,link_id,link_type,is_read)"
+                                 "VALUES (SELECT user_id FROM repository r WHERE r.id=w.rep_id,"
+                                 "(SELECT repo_name FROM repository r WHERE r.id=s.rep_id ),"
+                                 "CONCAT('+1 for',SELECT name FROM repository r WHERE r.id=sw.rep_id ),w.rep_id,'STAR',0);"
+                                 "END"
+        }
 
