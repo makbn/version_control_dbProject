@@ -4,14 +4,14 @@ from PySide.QtUiTools import QUiLoader
 from PySide.QtWebKit import QWebView
 import MyWidgets
 from Database import DatabaseMiddleWare
-from ui import MainWidget
+from ui import MainWidget, NewLogin
 from ui import LoginWidget
 from PySide.QtCore import *
 from PySide.QtGui import *
 from PySide.QtDeclarative import *
 from PySide import *
 
-
+from ui import RegisterPage
 
 PARTITION = 50
 image_size = 64
@@ -66,16 +66,26 @@ class SplashWidget(QtGui.QWidget):
         self.view.show()
 
     def getUserNumber(self):
-        return str(DatabaseMiddleWare.getUsersNumber()[0]['count'])
+        try:
+            return str(DatabaseMiddleWare.getUsersNumber()[0]['count'])
+        except:
+            return "db Exception"
 
     def getRepoNumbers(self):
-        return str(DatabaseMiddleWare.getRepoNumber()[0]['count'])
+        try:
+            return str(DatabaseMiddleWare.getRepoNumber()[0]['count'])
+        except:
+            return "db Exception"
 
 
     def doLogin(self):
-        logWidget = LoginWidget.LoginWidget(self.WINDOW_PARENT)
+        logWidget = NewLogin.NewLoginWidget(self.WINDOW_PARENT)
+        NewLogin.BACK_WIDGET="SplashWidget"
         self.WINDOW_PARENT.setCentralWidget(logWidget)
-        print(self.WINDOW_PARENT.central_widget)
 
     def doSignup(self):
-        print("signup")
+        signup=RegisterPage.RegisterPage(self.WINDOW_PARENT)
+        print(RegisterPage.BACK_WIDGET)
+        RegisterPage.BACK_WIDGET="SplashWidget"
+        print(RegisterPage.BACK_WIDGET)
+        self.WINDOW_PARENT.setCentralWidget(signup)
