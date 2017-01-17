@@ -10,6 +10,7 @@ from Database import DatabaseMiddleWare
 import Utils
 from models import Repository
 import MyWidgets
+from ui import SearchPage
 
 PARTITION = 50
 image_size = 64
@@ -160,9 +161,15 @@ class DashboardWidget(QtGui.QWidget):
         if(myUrl.__contains__("Notif")):
             print("Notif identifier : " + myUrl)
             segment = myUrl
+        elif myUrl.__contains__("search"):
+            self.goToSearch()
         else :
             print("default")
 
+    def goToSearch(self):
+        search = SearchPage.SearchPage(self.WINDOW_PARENT)
+        SearchPage.BACK_WIDGET = "DashboardWidget"
+        self.WINDOW_PARENT.setCentralWidget(search)
     def handleLinkClicked2(self, url):
         print("clicked")
         myUrl = url.toString()
