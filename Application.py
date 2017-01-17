@@ -33,8 +33,8 @@ class MainWindow(QtGui.QMainWindow):
 
 
         #splash_widget=SplashWidget.SplashWidget(self)
-        #splash_widget=DashbordWidget.DashboardWidget(self)
-        splash_widget=RepositoryPage.RepositoryPage(self,"navid","gozo")
+        splash_widget=DashbordWidget.DashboardWidget(self)
+        #.splash_widget=RepositoryPage.RepositoryPage(self,"navid","gozo")
 
         self.central_widget.addWidget(splash_widget)
         #self.setWindowTitle(self.WINDOW_TITLE)

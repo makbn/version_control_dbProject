@@ -64,10 +64,12 @@ Layout
 */
 
 .wrap {
+  background: rgb(64, 64, 64);
+  border-width: 1px 1px 1px 1px;
+  border-color: #2ECC40;
   position: relative;
   max-width: 800px;
   height: 50px;
-    border-width: 0 0 1px;
 }
 
 /*
@@ -165,10 +167,10 @@ Masthead
 */
 
 .masthead {
-  background: rgb(64, 64, 64);
+  background: transparent;
   color: #fff;
   border-color: #0ea432;
-  border-width: 0 0 1px;
+  border-width: 1px 1px 1px 1px;
   position: relative;
 }
 

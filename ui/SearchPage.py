@@ -14,7 +14,7 @@ from Database import DatabaseMiddleWare
 
 PARTITION = 50
 image_size = 64
-
+BACK_WIDGET = None
 class SearchPage(QtGui.QWidget):
     WINDOW_WIDTH= 800
     WINDOW_HEIGHT=600
@@ -105,3 +105,9 @@ class SearchPage(QtGui.QWidget):
         dvider = MyWidgets.createLableColered(self,0,PARTITION*11 +10,self.WINDOW_WIDTH,100,"rgba(29,185,84,255)")
         footer = MyWidgets.createTextLable(self.WINDOW_FOOTER_MESSAGE, self,PARTITION*1, PARTITION*11 +15, "white", "5")
         close=MyWidgets.createBorderLessButton("EXIT",self,710,0,self.WINDOW_PARENT.quit)
+        back=MyWidgets.createBorderLessButton("Back",self,630,0,self.back)
+
+    def back(self):
+        import Utils
+        back=Utils.UIHelper.backPressHandler(BACK_WIDGET,self.WINDOW_PARENT)
+        self.WINDOW_PARENT.setCentralWidget(back)

@@ -50,11 +50,11 @@ class NewLoginWidget(QtGui.QWidget):
         dvider = MyWidgets.createLableColered(self,0,PARTITION*11 +10,self.WINDOW_WIDTH,100,"rgba(29,185,84,255)")
         footer = MyWidgets.createTextLable(self.WINDOW_FOOTER_MESSAGE, self,PARTITION*1, PARTITION*11 +15, "white", "5")
         close=MyWidgets.createBorderLessButton("EXIT",self,710,0,self.WINDOW_PARENT.quit)
-        close = MyWidgets.createBorderLessButton("BACK", self, 630, 0, self.back)
+        back = MyWidgets.createBorderLessButton("BACK", self, 630, 0, self.back)
 
     def handleLinkClicked(self, url):
         action=url.toString()
-        if(action.__contains__("doSignup")):
+        if action.__contains__("doSignup"):
             self.signup()
         elif(action.__contains__("doLogin")):
             self.login()
@@ -66,9 +66,12 @@ class NewLoginWidget(QtGui.QWidget):
     def login(self):
         frame = self.view.page().mainFrame()
         document = frame.documentElement()
-        enteredUsr= document.findAll(".getusername").at(0).toPlainText()
-        enteredPas= document.findAll(".getpassword").at(0).toPlainText()
-        retrieve = DatabaseMiddleWare.fetchUser(enteredUsr)
+        try:
+            enteredUsr= document.findAll(".getusername").at(0).toPlainText()
+            enteredPas= document.findAll(".getpassword").at(0).toPlainText()
+            retrieve = DatabaseMiddleWare.fetchUser(enteredUsr)
+        except:
+            print("db exception!")
         retrieve = None
         if retrieve is None:
             print("Username does not exist!")
@@ -81,11 +84,13 @@ class NewLoginWidget(QtGui.QWidget):
                     print("Welcome!!!")
                     print ("retID = "+retId+"\nretPass = "+retPass+"\nretUser = "+retUser)
                 else :
-                    print("Username or Password is incorrect!!!")
+                    frame = self.view.page().mainFrame()
+                    frame.evaluateJavaScript('show();')
 
     def recoverPassword(self):
         print("LOL!")
-        frame = self.view.page().mainFrame()
+        rpf=RecoverPasswordForm(self.WINDOW_PARENT);
+        rpf.show()
 
     def signup(self):
         from ui import RegisterPage
@@ -96,3 +101,36 @@ class NewLoginWidget(QtGui.QWidget):
     def back(self):
         back=Utils.UIHelper.backPressHandler(BACK_WIDGET,self.WINDOW_PARENT)
         self.WINDOW_PARENT.setCentralWidget(back)
+
+
+class RecoverPasswordForm(QDialog):
+    def __init__(self, parent=None):
+        self.WINDOW_PARENT=parent
+        super(RecoverPasswordForm, self).__init__(parent)
+        self.setWindowTitle("Why do you forgot your password ma nigga?whyyyyyy?")
+        self.view=QWebView(self)
+        self.view.linkClicked.connect(self.handleLinkClicked)
+        self.page = self.view.page();
+        self.view.setMinimumSize(400, 400)
+        self.view.setMaximumSize(400, 400)
+        self.view.page().setLinkDelegationPolicy(
+            QtWebKit.QWebPage.DelegateAllLinks)
+        cwd = os.getcwd()
+        self.view.load(QUrl.fromLocalFile(os.path.join(cwd, "resource", "RecoveryPassword.html")))
+        self.WINDOW_PARENT.QApplicationRef.processEvents()
+        self.view.show()
+        self.setStyleSheet("border-width: 0px; border-style: solid")
+        #self.setWindowFlags(QtCore.Qt.FramelessWindowHint)
+    def handleLinkClicked(self, url):
+        action=url.toString()
+        if action.__contains__("recover"):
+            frame = self.view.page().mainFrame()
+            document = frame.documentElement()
+            try:
+                answer = document.findAll(".getanswer").at(0).toPlainText()
+                email = document.findAll(".getemail").at(0).toPlainText()
+                question = document.findAll(".getquestion").at(0).toPlainText()
+
+                DatabaseMiddleWare.recoverPassword(question,answer,email)
+            except:
+                print("ha?")
