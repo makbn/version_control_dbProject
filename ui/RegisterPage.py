@@ -41,6 +41,7 @@ class RegisterPage(QtGui.QWidget):
         cwd = os.getcwd()
         self.view.load(QUrl.fromLocalFile(os.path.join(cwd,"resource","RegisterForm.html")))
         self.WINDOW_PARENT.QApplicationRef.processEvents()
+        print(self.view.page().mainFrame().toHtml())
 
         frame = self.view.page().mainFrame()
         document = frame.documentElement()
@@ -76,20 +77,20 @@ class RegisterPage(QtGui.QWidget):
         Gender = document.findAll("#getGender").at(0).toPlainText()
 
         user = {
-            "Email": email,
+            "email": email,
             "password": password,
             "username": username,
             "firstname": firstname,
             "lastname": lastname,
             "birthdate": date,
-            "Gender": 1 if Gender == "Male" else 0
+            "gender": 1 if Gender == "Male" else 0
         }
-        print(user)
-        #found = DatabaseMiddleWare.fetchUser(username)
-        #if(found != None) :
-        #    print("username Already exists")
-        #else:
-        #    print("register")
+        found = DatabaseMiddleWare.fetchUser(username)
+        if(found != None) :
+            print("username Already exists")
+        else:
+            DatabaseMiddleWare.register(user)
+            print("register")
 
     def back(self):
         back=Utils.UIHelper.backPressHandler(BACK_WIDGET,self.WINDOW_PARENT)

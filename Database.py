@@ -2,12 +2,12 @@ from datetime import datetime
 
 import pymysql
 
-hostname = "Localhost"
-username = "root"
-password = "1234"
-databasename = "dbProject"
+hostname = "localhost"
+username = "dbProjectTester"
+password = "12341234"
+databasename = "TESTDB"
 port = 3307
-tableName = {'user', 'repository', 'like', 'star', 'issue', 'watch', 'answer', 'notification'}
+tableName = ['user', 'repository', 'star', 'issue', 'watch', 'answer', 'likeRep' , 'notification']
 
 
 class DatabaseMiddleWare(object):
@@ -17,13 +17,23 @@ class DatabaseMiddleWare(object):
 
     @staticmethod
     def initialize():
+        print("initializing DB")
         try:
-            DatabaseMiddleWare.dbRef = pymysql.connect(host=hostname, port=port, user=username, passwd=password,
+            print("Trying to connect to DB...")
+            DatabaseMiddleWare.dbRef = pymysql.connect(host=hostname, user=username, passwd=password,
                                                        db=databasename)
+            print("Connected")
+            print("connected")
             for s in tableName:
+                print("connected2")
                 if not DatabaseMiddleWare.checkTableExists(s):
+                    print("create table " + s)
                     DatabaseMiddleWare.createTable(s)
+                else :
+                    print("table exists" + s)
+
         except:
+            print("got to an exception")
             DatabaseMiddleWare.onException()
 
     @staticmethod
@@ -60,22 +70,29 @@ class DatabaseMiddleWare(object):
     def fetchUser(username):
         usernameStr = str(username)
         cur = DatabaseMiddleWare.dbRef.cursor(DatabaseMiddleWare.curType)
-        cur.execute("SELECT * FROM user WHERE username =" + usernameStr)
+        print("SELECT * FROM user WHERE username =" + usernameStr)
+        cur.execute("SELECT * FROM user WHERE username = '{username}'".format(username=usernameStr))
         record = cur.fetchone()
+        print(record)
         return record
-
 
 
     @staticmethod
     def checkTableExists(tablename):
+        print("X")
+        print("""SELECT COUNT(*) AS Count FROM information_schema.tables WHERE table_name = '{MyTable}';""".format(MyTable=tablename))
         dbcur = DatabaseMiddleWare.dbRef.cursor(DatabaseMiddleWare.curType)
-        dbcur.execute("""SELECT COUNT(*) FROM information_schema.tables WHERE table_name = '{0}'""".format(
-            tablename.replace('\'', '\'\'')))
-        if dbcur.fetchone()[0] == 1:
+        dbcur.execute("""SELECT COUNT(*) AS Count FROM information_schema.tables WHERE table_name = '{MyTable}';""".format(MyTable=tablename))
+        temp = int(str(dbcur.fetchone()['Count']))
+        print(temp)
+        if temp == 1:
+            print("shit")
             dbcur.close()
             return True
         dbcur.close()
+        print("2 ta shit")
         return False
+
     @staticmethod
     def recoverPassword(qNumber,answer,email):
         query="SELECT * FROM user WHERE user.email="+email
@@ -89,14 +106,32 @@ class DatabaseMiddleWare(object):
         else:
             return "wrong question dude!"
 
+    @staticmethod
+    def register(user):
+        cur = DatabaseMiddleWare.dbRef.cursor(DatabaseMiddleWare.curType)
+        insertQuery = "INSERT INTO user(username,password,email,first_name,last_name,gender,question_number,answer)" \
+                      "VALUES ('{username}','{password}','{email}','{first_name}','{last_name}','{gender}',1,'gogogol')"
+        insertQueryfilled = insertQuery.format( username=user["username"],
+                                                email=user["email"],
+                                                password=user["password"],
+                                                first_name=user["firstname"],
+                                                gender=user["gender"],
+                                                last_name=user["lastname"])
+        try:
+            cur.execute(insertQueryfilled)
+            DatabaseMiddleWare.dbRef.commit()
+        except:
+            print("shit happens all the time")
 
-    def createTable(self, tableName):
+
+    @staticmethod
+    def createTable( tname):
         cur = DatabaseMiddleWare.dbRef.cursor(DatabaseMiddleWare.curType)
         switcher = {
             'user': "CREATE TABLE  user ("
-                    "id int PRIMARY KEY,"
+                    "id int PRIMARY KEY AUTO_INCREMENT,"
                     "username VARCHAR (20) UNIQUE NOT NULL,"
-                    "password VARCHAR (20) NOT NULL CHECK (LEN(password)>7),"
+                    "password VARCHAR (20) NOT NULL ,"
                     "email VARCHAR (100) UNIQUE NOT NULL,"
                     "first_name VARCHAR (25) NOT NULL,"
                     "last_name VARCHAR (45) NOT NULL,"
@@ -159,11 +194,11 @@ class DatabaseMiddleWare(object):
                 "description VARCHAR(200) NOT  NULL,"
                 "is_correct INT(1) DEFAULT 0,"
                 "created_date DATE NOT NULL,"
-                "FOREIGN (user_id) REFERENCES user(id),"
-                "FOREIGN (issue_id) REFERENCES issue(id));",
+                "FOREIGN KEY (user_id) REFERENCES user(id),"
+                "FOREIGN KEY (issue_id) REFERENCES issue(id));",
 
-            'like':
-                "CREATE TABLE like("
+            'likeRep':
+                "CREATE TABLE likeRep("
                 "issue_id INT NOT NULL,"
                 "answer_id INT NOT NULL ,"
                 "user_id INT NOT NULL,"
@@ -173,11 +208,14 @@ class DatabaseMiddleWare(object):
                 "FOREIGN KEY (user_id) REFERENCES user(id));"
         }
 
-        selectedQuery = switcher.get(tableName, None)
-        if selectedQuery != None:
-            cur.execute(selectedQuery);
+        selectedQuery = switcher.get(tname, None)
+        print("table Name" + tname)
+        print("Squery -> " + selectedQuery)
+        if selectedQuery is not None:
+            cur.execute(selectedQuery)
+            print("gilili")
         else:
-            print(tableName + " is not a valid table");
+            print(tname + " is not a valid table")
 
     @staticmethod
     def getEntityByKey(tableName, **kwargs):
@@ -187,7 +225,7 @@ class DatabaseMiddleWare(object):
         cur = DatabaseMiddleWare.dbRef.cursor(DatabaseMiddleWare.curType)
         statement = ""
         for key in kwargs:
-            statement += key + "=" + kwargs[key] + " AND ";
+            statement += key + "=" + kwargs[key] + " AND "
         statement = statement[:-5]
         query = "SELECT * FROM " + tableName + " WHERE " + statement
         cur.execute(query)
@@ -210,9 +248,6 @@ class DatabaseMiddleWare(object):
                 "SELECT repo_name,description,1,source_id" + is_private + "," + user_id + "," + date + " FROM TABLE WHERE id=" + source_id + " UPDATE source_id CASE source_id=-1 THEN " + source_id
         cur.execute(query)
 
-    @staticmethod
-    def register(user):
-        pass
 
 
     def triggers(self):

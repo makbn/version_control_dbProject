@@ -22,13 +22,17 @@ class DashboardWidget(QtGui.QWidget):
     WINDOW_FOOTER_MESSAGE="Some text here for DataBase Project 2016"
     WINDOW_PARENT=None
     pageDocument = None
+    currentUser = None
 
 
     def __init__(self, parent=None):
         super(DashboardWidget, self).__init__(parent)
         self.WINDOW_PARENT = parent
+        self.currentUser = Utils.UserManager.getCurrentUser()
+        #print("Dashport -> " + str(self.currentUser))
         self.layout = QtGui.QHBoxLayout()
         self.addWidgets()
+
 
     def addWidgets(self):
         self.background=MyWidgets.createBackground(self)
@@ -51,7 +55,7 @@ class DashboardWidget(QtGui.QWidget):
         frame = self.view.page().mainFrame()
         document = frame.documentElement()
         self.pageDocument = document
-        print(document.findAll("#repository_list").count())
+        #print(document.findAll("#repository_list").count())
         inner=""
         for num in range(21):
           inner+=self.createRepositoryElement(Repository.REPOSITORY_TEST)
@@ -66,9 +70,16 @@ class DashboardWidget(QtGui.QWidget):
         self.view1.setMinimumSize(self.WINDOW_WIDTH / 3, PARTITION * 11 + 10)
         self.view1.setMaximumSize(self.WINDOW_WIDTH / 3, PARTITION * 10 + 10)
         cwd = os.getcwd()
+
         self.fillTheNotifPanel()
+
         self.view1.load(QUrl.fromLocalFile(os.path.join(cwd,"resource","Panel.html")))
+
         self.WINDOW_PARENT.QApplicationRef.processEvents()
+        doc = self.view1.page().mainFrame().documentElement()
+        print(self.view1.page().mainFrame().toHtml())
+        doc.findAll("#namePlaceHolder").at(0).setPlainText(str(self.currentUser["first_name"]) + " " + str(self.currentUser["last_name"]))
+        doc.findAll("#usernamePlaceHolder").at(0).setPlainText(str(self.currentUser["username"]))
         self.view1.show()
 
     def fillTheNotifPanel(self):
@@ -170,12 +181,22 @@ class DashboardWidget(QtGui.QWidget):
         search = SearchPage.SearchPage(self.WINDOW_PARENT)
         SearchPage.BACK_WIDGET = "DashboardWidget"
         self.WINDOW_PARENT.setCentralWidget(search)
+
     def handleLinkClicked2(self, url):
-        print("clicked")
+        #print("clicked")
         myUrl = url.toString()
         if(myUrl.__contains__("Notif")):
             segment = url.spit("/")
-            print("Notif identifier : "+segment[1])
+            #print("Notif identifier : "+segment[1])
         else :
             print("default")
 
+
+    def setUsername(self,document):
+        nameHolder = document.findAll("#namePlaceHolder").at(0)
+        usernameHolder = document.findAll("#usernamePlaceHolder").at(0)
+        print("fasdf")
+        print(nameHolder.toInnerXml())
+        document.findAll("namePlaceHolder").at(0).setPlainText(str(self.currentUser["first_name"]) + " " + str(self.currentUser["last_name"]))
+        document.findAll("usernamePlaceHolder").at(0).setInnerXml(str(self.currentUser["username"]))
+        print("end")
