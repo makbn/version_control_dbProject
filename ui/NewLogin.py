@@ -11,6 +11,7 @@ from PySide.QtGui import *
 from PySide.QtDeclarative import *
 from PySide import *
 from Database import DatabaseMiddleWare
+from ui.DashbordWidget import DashboardWidget
 
 PARTITION = 50
 image_size = 64
@@ -23,12 +24,14 @@ class NewLoginWidget(QtGui.QWidget):
     WINDOW_PASSWORD_TITLE="Password :"
     WINDOW_USERNAM_TITLE="Username :"
     WINDOW_PARENT=None
+    currentUser = None
 
     def __init__(self, parent=None):
         super(NewLoginWidget, self).__init__(parent)
         self.WINDOW_PARENT=parent
         self.layout = QtGui.QHBoxLayout()
         self.addWidgets()
+
 
     def loadSplash(self):
         self.view = QWebView(self)
@@ -60,8 +63,15 @@ class NewLoginWidget(QtGui.QWidget):
             self.login()
         else:
             self.recoverPassword()
+
     def handleFormSubmitted(self, url):
         print(url)
+
+    def goToDashboard(self):
+        dsh = DashboardWidget(self.WINDOW_PARENT)
+        dsh.BACK_WIDGET = "SplashWidget"
+        self.WINDOW_PARENT.setCentralWidget(dsh)
+
 
     def login(self):
         frame = self.view.page().mainFrame()
@@ -72,25 +82,29 @@ class NewLoginWidget(QtGui.QWidget):
             retrieve = DatabaseMiddleWare.fetchUser(enteredUsr)
         except:
             print("db exception!")
-        retrieve = None
         if retrieve is None:
             print("Username does not exist!")
         else :
-            retUser = str(retrieve['customerNumber']) #TODO : change the retrieving data according to the designed database. change to username
-            retId = str(retrieve['country'])#TODO : change the retrieving data according to the designed database change to id
-            retPass = str(retrieve['phone'])#TODO : change the retrieving data according to the designed database change to password
+            retUser = str(retrieve['username']) #TODO : change the retrieving data according to the designed database. change to username
+            retId = str(retrieve['id'])#TODO : change the retrieving data according to the designed database change to id
+            retPass = str(retrieve['password'])#TODO : change the retrieving data according to the designed database change to password
             if retUser == enteredUsr :
                 if retPass == enteredPas :
                     print("Welcome!!!")
                     print ("retID = "+retId+"\nretPass = "+retPass+"\nretUser = "+retUser)
+                    Utils.UserManager.setCurrentUser(user=retrieve)
+                    self.goToDashboard()
                 else :
+
                     frame = self.view.page().mainFrame()
                     frame.evaluateJavaScript('show();')
 
     def recoverPassword(self):
         print("LOL!")
-        rpf=RecoverPasswordForm(self.WINDOW_PARENT);
+        rpf=RecoverPasswordForm(self.WINDOW_PARENT)
         rpf.show()
+
+
 
     def signup(self):
         from ui import RegisterPage
@@ -110,7 +124,7 @@ class RecoverPasswordForm(QDialog):
         self.setWindowTitle("Why do you forgot your password ma nigga?whyyyyyy?")
         self.view=QWebView(self)
         self.view.linkClicked.connect(self.handleLinkClicked)
-        self.page = self.view.page();
+        self.page = self.view.page()
         self.view.setMinimumSize(400, 400)
         self.view.setMaximumSize(400, 400)
         self.view.page().setLinkDelegationPolicy(

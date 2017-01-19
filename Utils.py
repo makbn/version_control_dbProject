@@ -17,6 +17,13 @@ class UIHelper:
         else:
             return DashbordWidget.DashboardWidget(Parent)
 class UserManager:
+    current_user = None
+
+    @staticmethod
+    def setCurrentUser(user):
+
+        UserManager.current_user = user
+
     @staticmethod
     def getCurrentUser():
-        return User.USER_TEST
+        return UserManager.current_user
