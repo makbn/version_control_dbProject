@@ -13,6 +13,7 @@ from Database import DatabaseMiddleWare
 
 # Our main window
 from ui import RepositoryPage
+from ui.CrtRepositoryWidget import CrtRepositoryPage
 
 
 class MainWindow(QtGui.QMainWindow):
@@ -33,7 +34,7 @@ class MainWindow(QtGui.QMainWindow):
 
 
         splash_widget=SplashWidget.SplashWidget(self)
-        #splash_widget=DashbordWidget.DashboardWidget(self)
+        #splash_widget=CrtRepositoryPage(self)
         #.splash_widget=RepositoryPage.RepositoryPage(self,"navid","gozo")
 
         self.central_widget.addWidget(splash_widget)
