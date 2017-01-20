@@ -4,12 +4,6 @@
     <meta charset="UTF-8">
     <title>Title</title>
     <link href="css/bootstrap.min.css" rel="stylesheet">
-    <script>
-        function Search(){
-            var searchQuery1 = document.getElementById("SearchQuery").value;
-            document.getElementById("getSearchQuery").innerHTML = searchQuery1;
-        }
-    </script>
 </head>
 <body style="background-color:rgba(45,45,48,255)">
 <div class="container">
@@ -59,47 +53,7 @@
                 Search Result :
                 <hr></hr>
             </div>
-            <div id="SearchResultList" style="overflow: scroll ; height: 290px ;" class="well-lg well well-sm">
-                <div class="searchResult" style="color: black;">
-                    Project Name :
-                    <a href="Repository/id" class="Project-Name" style="margin: 5px">My Project Name</a>
-                    <br>
-                    User :
-                    <a href="UserProfile/id" class="Username" style="margin: 5px">My User Name</a>
-                    <hr></hr>
-                </div>
-                <div class="searchResult" style="color: black;">
-                    Project Name :
-                    <a href="Repository/id" class="Project-Name" style="margin: 5px">My Project Name</a>
-                    <br>
-                    User :
-                    <a href="UserProfile/id" class="Username" style="margin: 5px">My User Name</a>
-                    <hr></hr>
-                </div>
-                <div class="searchResult" style="color: black;">
-                    Project Name :
-                    <a href="Repository/id" class="Project-Name" style="margin: 5px">My Project Name</a>
-                    <br>
-                    User :
-                    <a href="UserProfile/id" class="Username" style="margin: 5px">My User Name</a>
-                    <hr></hr>
-                </div>
-                <div class="searchResult" style="color: black;">
-                    Project Name :
-                    <a href="Repository/id" class="Project-Name" style="margin: 5px">My Project Name</a>
-                    <br>
-                    User :
-                    <a href="UserProfile/id" class="Username" style="margin: 5px">My User Name</a>
-                    <hr></hr>
-                </div>
-                <div class="searchResult" style="color: black;">
-                    Project Name :
-                    <a href="Repository/id" class="Project-Name" style="margin: 5px">My Project Name</a>
-                    <br>
-                    User :
-                    <a href="UserProfile/id" class="Username" style="margin: 5px">My User Name</a>
-                    <hr></hr>
-                </div>
+            <div id="SearchResultList" style="overflow-y: scroll ; overflow-x:hidden  ; height: 290px ;" class="well-lg well well-sm">
             </div>
         </div>
 
@@ -110,6 +64,11 @@
     </div>
 
 </div>
-
+   <script>
+        function Search(){
+            var searchQuery1 = document.getElementById("SearchQuery").value;
+            document.getElementById("getSearchQuery").innerHTML = searchQuery1;
+        }
+    </script>
 </body>
 </html>

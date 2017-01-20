@@ -4,7 +4,7 @@ import pymysql
 
 hostname = "localhost"
 username = "dbProjectTester"
-password = "1234"
+password = "12341234"
 databasename = "TESTDB"
 port = 3307
 tableName = ['user', 'repository', 'star', 'issue', 'watch', 'answer', 'likeRep' , 'notification']
@@ -17,22 +17,16 @@ class DatabaseMiddleWare(object):
 
     @staticmethod
     def initialize():
-        print("initializing DB")
         try:
-            print("Trying to connect to DB...")
-            DatabaseMiddleWare.dbRef = pymysql.connect(host=hostname,port=3307, user=username, passwd=password,
+            DatabaseMiddleWare.dbRef = pymysql.connect(host=hostname, user=username, passwd=password,
                                                        db=databasename)
-            print("Connected")
             for s in tableName:
-                print("connected2")
                 if not DatabaseMiddleWare.checkTableExists(s):
-                    print("create table " + s)
                     DatabaseMiddleWare.createTable(s)
                 else :
                     print("table exists" + s)
-
-        except Exception as e:
-            print("got to an exception= "+ str(e))
+        except:
+            print("got to an exception")
             DatabaseMiddleWare.onException()
 
     @staticmethod
@@ -69,27 +63,20 @@ class DatabaseMiddleWare(object):
     def fetchUser(username):
         usernameStr = str(username)
         cur = DatabaseMiddleWare.dbRef.cursor(DatabaseMiddleWare.curType)
-        print("SELECT * FROM user WHERE username =" + usernameStr)
         cur.execute("SELECT * FROM user WHERE username = '{username}'".format(username=usernameStr))
         record = cur.fetchone()
-        print(record)
         return record
 
 
     @staticmethod
     def checkTableExists(tablename):
-        print("X")
-        print("""SELECT COUNT(*) AS Count FROM information_schema.tables WHERE table_name = '{MyTable}';""".format(MyTable=tablename))
         dbcur = DatabaseMiddleWare.dbRef.cursor(DatabaseMiddleWare.curType)
         dbcur.execute("""SELECT COUNT(*) AS Count FROM information_schema.tables WHERE table_name = '{MyTable}';""".format(MyTable=tablename))
         temp = int(str(dbcur.fetchone()['Count']))
-        print(temp)
         if temp == 1:
-            print("shit")
             dbcur.close()
             return True
         dbcur.close()
-        print("2 ta shit")
         return False
 
     @staticmethod
@@ -208,11 +195,8 @@ class DatabaseMiddleWare(object):
         }
 
         selectedQuery = switcher.get(tname, None)
-        print("table Name" + tname)
-        print("Squery -> " + selectedQuery)
         if selectedQuery is not None:
             cur.execute(selectedQuery)
-            print("gilili")
         else:
             print(tname + " is not a valid table")
 
@@ -247,7 +231,41 @@ class DatabaseMiddleWare(object):
                 "SELECT repo_name,description,1,source_id" + is_private + "," + user_id + "," + date + " FROM TABLE WHERE id=" + source_id + " UPDATE source_id CASE source_id=-1 THEN " + source_id
         cur.execute(query)
 
+    @staticmethod
+    def getIssueNumber():
+        cur = DatabaseMiddleWare.dbRef.cursor(DatabaseMiddleWare.curType)
+        cur.execute(
+            "SELECT count(*) AS count FROM issue")
+        record = cur.fetchall()
+        return record
 
+
+    @staticmethod
+    def getAllRepoByName(name):
+        print("fetching repo by name")
+        cur = DatabaseMiddleWare.dbRef.cursor(DatabaseMiddleWare.curType)
+        queryTemp = "SELECT r1.id repo_id ,us1.id user_id, repo_name , count(*) stars , is_private , description , first_name , last_name " \
+                "FROM repository r1,star s1,user us1 " \
+                "WHERE us1.id = r1.owner_id AND r1.id=s1.rep_id AND repo_name = '{repoName}' GROUP BY r1.id;"
+        query = queryTemp.format(repoName = name)
+        cur.execute(query)
+        container = cur.fetchall()
+        print(container[0])
+        print(container[0]['repo_name'])
+        return container
+
+    @staticmethod
+    def getAllRepoOfTheUser(user):
+        cur = DatabaseMiddleWare.dbRef.cursor(DatabaseMiddleWare.curType)
+
+        querytemp = "SELECT r1.id , repo_name , count(*) stars , is_private , description " \
+                "FROM repository r1,star s1 " \
+                "WHERE r1.id=s1.rep_id AND r1.owner_id={id} GROUP BY r1.id;"
+        query = querytemp.format(id=user["id"])
+        print(query)
+        cur.execute(query)
+        temp = cur.fetchall()
+        return temp
 
     def triggers(self):
         triggers ={

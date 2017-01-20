@@ -17,8 +17,6 @@
     <link href="css/font-awesome.css" rel="stylesheet">
     <link href="css/bootstrap.css" rel="stylesheet">
     <link href="css/scrollbar.css" rel="stylesheet">
-    <script src="js/jquery.js"></script>
-    <script src="js/BigSlide.js"></script>
 
     <style>
 
@@ -39,34 +37,9 @@
 </head>
 
 <body style="background: #2d2d30;">
-
-    <div id="menu" class="panel" role="navigation" style="position: fixed; top: 0px; bottom: 0px; height: 100%; left: -15.625em; width: 15.625em; transition: left 300ms ease 0s;">
-        <a href="/jj" style="align-content: center;text-align: center;color: #1aa62a; ">Notifications </a>
-        <ul style="height: 500px ; overflow: scroll" id="NotificationList">
-            <li><a href="/Notif-notifId" style="background-color: white;color: black" class="glyphicon glyphicon-envelope">Title1</a></li>
-            <li><a href="/Notif-{notifId}" style="background-color: gray" class="glyphicon glyphicon-envelope">Title2</a></li>
-            <li><a href="/Notif-{notifId}" style="background-color: gray" class="glyphicon glyphicon-envelope">Title3</a></li>
-            <li><a href="/Notif-{notifId}" style="background-color: white ; color: black" class="glyphicon glyphicon-envelope">Title4</a></li>
-            <li><a href="/Notif-{notifId}" style="background-color: white ; color: black" class="glyphicon glyphicon-envelope">Title4</a></li>
-            <li><a href="/Notif-{notifId}" style="background-color: white ; color: black" class="glyphicon glyphicon-envelope">Title4</a></li>
-            <li><a href="/Notif-{notifId}" style="background-color: white ; color: black" class="glyphicon glyphicon-envelope">Title4</a></li>
-            <li><a href="/Notif-{notifId}" style="background-color: white ; color: black" class="glyphicon glyphicon-envelope">Title4</a></li>
-            <li><a href="/Notif-{notifId}" style="background-color: white ; color: black" class="glyphicon glyphicon-envelope">Title4</a></li>
-        </ul>
-    </div>
-
-    <div class="masthead">
-        <div class="wrap push" style="left: 0px; transition: left 300ms ease 0s;">
-
-            <a href="menu" class="menu-link">☰</a>
-
-
-
-
-        </div> <!-- /.wrap -->
-        <div style="height: 1px;background-color: #1aa62a"></div>
-    </div> <!-- /.masthead-->
-
+<div style="display: inline">
+	<!--profile-->
+	<div style="float: left" class="">
 
     <div class="container">
     <div class="row profile">
@@ -90,21 +63,22 @@
 				<!-- SIDEBAR BUTTONS -->
 				<div class="profile-userbuttons" style="margin-top: 20px;margin-bottom: 20px">
 					<button type="button" class="btn btn-success btn-sm">Edit Profile</button>
-					<button type="button" class="btn btn-danger btn-sm">Logout</button>
+					<button type="button" class="btn btn-danger btn-sm"><a href="/logOut" style="color: whitesmoke">Logout</a></button>
 				</div>
 				<!-- END SIDEBAR BUTTONS -->
 				<!-- SIDEBAR MENU -->
 				<div class="profile-usermenu">
 					<ul class="nav">
 						<li class="active" style="padding-top: 20px">
-							<a href="/search">
-							<i class="glyphicon glyphicon-search"></i>
-							Search </a>
+							<a href="/createRepo">
+							<i class="glyphicon glyphicon-plus"></i>
+							Create Repository </a>
 						</li>
 						<li style="padding-top: 20px">
-							<a href="#">
-							<i class="glyphicon glyphicon-user"></i>
-							Account Settings </a>
+							<a href="/search">
+							<i class="glyphicon glyphicon-search"></i>
+								Search
+							</a>
 						</li>
 						<li style="padding-top: 20px">
 							<a href="#" target="_blank">
@@ -123,13 +97,30 @@
 		</div>
 	</div>
 </div>
-    <script src="bower_components/jquery/jquery.min.js"></script>
-    <script src="js/bigSlide.js"></script>
-    <script>
-        $(document).ready(function() {
-            $('.menu-link').bigSlide();
-        });
-    </script>
+</div>
+	<!--notification-->
+	<div style="float: right;margin-top:10px " class="col-md-3">
+        <ul style="height: 500px ; overflow: hidden" id="NotificationList">
+            <li><a href="/Notif-{notifId}" style="background-color: white ; color: black ; margin-top: 5px" class="btn btn-info glyphicon glyphicon-envelope">Title1</a></li>
+            <li><a href="/Notif-{notifId}" style="background-color: gray ; margin-top: 5px" class="btn btn-info glyphicon glyphicon-envelope">Title2</a></li>
+            <li><a href="/Notif-{notifId}" style="background-color: gray ; margin-top: 5px" class="btn btn-info glyphicon glyphicon-envelope">Title3</a></li>
+            <li><a href="/Notif-{notifId}" style="background-color: white ; color: black; margin-top: 5px" class="btn btn-info glyphicon glyphicon-envelope">Title4</a></li>
+            <li><a href="/Notif-{notifId}" style="background-color: white ; color: black; margin-top: 5px" class="btn btn-info glyphicon glyphicon-envelope">Title4</a></li>
+            <li><a href="/Notif-{notifId}" style="background-color: white ; color: black; margin-top: 5px" class="btn btn-info glyphicon glyphicon-envelope">Title4</a></li>
+            <li><a href="/Notif-{notifId}" style="background-color: white ; color: black; margin-top: 5px" class="btn btn-info glyphicon glyphicon-envelope">Title4</a></li>
+            <li><a href="/Notif-{notifId}" style="background-color: white ; color: black; margin-top: 5px" class="btn btn-info glyphicon glyphicon-envelope">Title4</a></li>
+            <li><a href="/Notif-{notifId}" style="background-color: white ; color: black; margin-top: 5px" class="btn btn-info glyphicon glyphicon-envelope">Title4</a></li>
+        </ul>
+    </div>
+</div>
+
+    <!--<script src="bower_components/jquery/jquery.min.js"></script>-->
+    <!--<script src="js/bigSlide.js"></script>-->
+    <!--<script>-->
+        <!--$(document).ready(function() {-->
+            <!--$('.menu-link').bigSlide();-->
+        <!--});-->
+    <!--</script>-->
 
 </body>
 
