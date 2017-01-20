@@ -34,6 +34,14 @@ class RepositoryPage(QtGui.QWidget):
         print(self.repositoryName)
         self.addWidgets()
 
+    def addWidgets(self):
+        self.background=MyWidgets.createBackground(self)
+        self.loadSplash()
+        dvider = MyWidgets.createLableColered(self,0,PARTITION*11 +10,self.WINDOW_WIDTH,100,"rgba(29,185,84,255)")
+        footer = MyWidgets.createTextLable(self.WINDOW_FOOTER_MESSAGE, self,PARTITION*1, PARTITION*11 +15, "white", "5")
+        close=MyWidgets.createBorderLessButton("EXIT",self,710,0,self.WINDOW_PARENT.quit)
+        close=MyWidgets.createBorderLessButton("BACK",self,630,0,self.back)
+
     def loadSplash(self):
         self.view = QWebView(self)
         self.view.linkClicked.connect(self.handleLinkClicked)
@@ -45,35 +53,42 @@ class RepositoryPage(QtGui.QWidget):
         self.view.load(QUrl.fromLocalFile(os.path.join(cwd,"resource","RepPage.html")))
         self.WINDOW_PARENT.QApplicationRef.processEvents()
         frame = self.view.page().mainFrame()
-
         document = frame.documentElement()
         self.fillTheDocument(document=document)
-        print(frame.toHtml())
         self.view.show()
 
     def fillTheDocument(self , document=None):
-        if document == None :
-            print("None doc")
-            return
-        else :
-            print("fsdafdasf " + self.repositoryName)
-            print(document.findAll("#RepositoryName").count())
-            document.findAll("#RepositoryName").at(0).setInnerXml(self.repositoryName)
+        MyRepo = DatabaseMiddleWare.fetchRepoDataById(self.repositoryId)
+        starCount = DatabaseMiddleWare.getStarCount(self.repositoryId)
+        document.findAll("#RepositoryName").at(0).setPlainText(MyRepo[0]["repo_name"])
+        document.findAll("#StarCount").at(0).setPlainText(str(starCount["stars"]))
+        document.findAll("#exampleTextarea").at(0).setPlainText(MyRepo[0]["description"])
+        allIssues = DatabaseMiddleWare.fetchIssuesForRepo(self.repositoryId)
+        issueHtml = self.createIssueList(allIssues)
+        document.findAll("#IssueList").at(0).setInnerXml(issueHtml)
 
-    def searchForIssue(self , repositoryName):
-        pass
+    def createIssueList(self , issues):
+        is_open_color = "deepskyblue"
+        not_open_color = "lawngreen"
+        template = """<li class="list-group-item " style="margin-outside: 1px">
+                            <span class="glyphicon glyphicon-pushpin"></span>
+                            Title :
+                            <a href="/Issue-{IssueId}" style="color: {Color} ">{IssueTitle}</a>
+                            <p>{IssueDesc}</p>
+                        </li>"""
+        outer = ""
+
+        for issue in issues:
+            inner = template.format(IssueId =issue["id"] ,
+                                    Color=is_open_color if issue["is_open"] == 1 else not_open_color ,
+                                    IssueTitle =issue["title"] ,
+                                    IssueDesc = issue["description"])
+            outer = outer + inner
+        return outer
 
     def Repository(self , repositoryName):
         pass
 
-
-    def addWidgets(self):
-        self.background=MyWidgets.createBackground(self)
-        self.loadSplash()
-        dvider = MyWidgets.createLableColered(self,0,PARTITION*11 +10,self.WINDOW_WIDTH,100,"rgba(29,185,84,255)")
-        footer = MyWidgets.createTextLable(self.WINDOW_FOOTER_MESSAGE, self,PARTITION*1, PARTITION*11 +15, "white", "5")
-        close=MyWidgets.createBorderLessButton("EXIT",self,710,0,self.WINDOW_PARENT.quit)
-        close=MyWidgets.createBorderLessButton("BACK",self,630,0,self.back)
 
     def handleLinkClicked(self, url):
         action=url.toString()
@@ -81,6 +96,29 @@ class RepositoryPage(QtGui.QWidget):
             self.fork()
         elif(action.__contains__("doLike")):
             self.like()
+        elif action.__contains__("Issue"):
+            self.selectIssue(action.split("-")[1])
+
+
+    def selectIssue(self,issue_id):
+        print("selected Issue ->" + issue_id)
+        #TODO : get the answers of this issue from db
+        answersList = DatabaseMiddleWare.getTheAnswerOfIssue(issue_id)
+        #TODO : put them in the menu
+
+        pass
+
+    def giveAnswersHtml(self,answerList):
+        outer = ""
+        template = """<li class="list-group-item " style="margin-outside: 1px;margin-bottom : 3px">
+                            <span class="glyphicon glyphicon-comment"></span>
+                            <a href="user-{UserId}">{Username}</a>
+                            <p class="IssueAnswer">{Answer}</p>
+                        </li>"""
+
+        for answer in answerList :
+            username=""
+            inner = template.format(Answer=answer["description"],UserId="user_id",Username=)
 
     def fork(self):
         print("Forked")

@@ -10,8 +10,11 @@ from Database import DatabaseMiddleWare
 import Utils
 from models import Repository
 import MyWidgets
+from ui import CreateRepWidget
+from ui import CrtRepositoryWidget
 from ui import LoginWidget
 from ui import NewLogin
+from ui import RepositoryPage
 from ui import SearchPage
 
 PARTITION = 50
@@ -31,7 +34,6 @@ class DashboardWidget(QtGui.QWidget):
         super(DashboardWidget, self).__init__(parent)
         self.WINDOW_PARENT = parent
         self.currentUser = Utils.UserManager.getCurrentUser()
-        #print("Dashport -> " + str(self.currentUser))
         self.layout = QtGui.QHBoxLayout()
         self.addWidgets()
 
@@ -53,13 +55,11 @@ class DashboardWidget(QtGui.QWidget):
         self.view.setMaximumSize((1.5*self.WINDOW_WIDTH / 3) - 2, PARTITION * 10 + 10)
         cwd = os.getcwd()
         self.view.load(QUrl.fromLocalFile(os.path.join(cwd,"resource","RepositoryList.html")))
-        #self.WINDOW_PARENT.QApplicationRef.processEvents()
+        self.WINDOW_PARENT.QApplicationRef.processEvents()
         frame = self.view.page().mainFrame()
         document = frame.documentElement()
         self.pageDocument = document
-        #print(document.findAll("#repository_list").count())
         repoHtml = self.fetchRepo()
-        print(repoHtml)
         document.findAll("#repository_list").at(0).setInnerXml(repoHtml)
         self.view.show()
 
@@ -137,7 +137,7 @@ class DashboardWidget(QtGui.QWidget):
         private_label = "orange"
         public_label = "green"
         innerHTML="""
-        <div class="item" id={id}>
+        <div class="item" id={user_id}>
         <i class="large git square icon"></i>
         <div class="content container">
             <a class="header" href="{url}">{name}</a>
@@ -148,7 +148,7 @@ class DashboardWidget(QtGui.QWidget):
                 </div>
                 <div class = "col-xs-3" style="padding-left: 2px">
                     <div class="ui label">
-                        <i class="star icon"></i> {starcount}
+                        <i class="star icon"></i> {StarCounter}
                     </div>
                 </div>
 
@@ -161,24 +161,21 @@ class DashboardWidget(QtGui.QWidget):
         <div></div>
         """
         repoList = DatabaseMiddleWare.getAllRepoOfTheUser(self.currentUser)
-
         for i in repoList :
-            print(i)
             starCount = DatabaseMiddleWare.getStarCount(i["id"])
-            temp=innerHTML.format(      id=str(i["id"]),
-                                        url="/" + str(i["id"]),
+            print(starCount)
+            temp=innerHTML.format(      user_id=str(i["user_id"]),
+                                        url="/Repository-{RepoId}".format(RepoId=str(i["id"])),
                                         name=i["repo_name"],
-                                        starcount=starCount,
+                                        StarCounter=str(starCount["stars"]),
                                         description=i["description"][:10] + "...",
                                         visibility="private" if (int(i["is_private"]) == 1) else "public",
                                         color=private_label if (int(i["is_private"]) == 1) else public_label
             )
             outerHtml = outerHtml + temp
-        #print(outerHtml)
         return outerHtml
 
     def handleLinkClicked(self, url):
-        print("clicked")
         myUrl = url.toString()
         if(myUrl.__contains__("Notif")):
             print("Notif identifier : " + myUrl)
@@ -190,10 +187,22 @@ class DashboardWidget(QtGui.QWidget):
             print("Loging out ...")
             self.logOut()
         elif myUrl.__contains__("createRepo"):
-            print("Creating repo...")
-            self.gotoCreateRepo() #TODO : READY UP THE REPO CREATING PAGE
+            self.goToCreateRepo()
+        elif myUrl.__contains__("Repository"):
+            self.goToRepoPage(myUrl.split("-")[1])
         else :
             print("default")
+
+    def goToCreateRepo(self):
+        CrtRepPage = CreateRepWidget.CreateRepWidget(self.WINDOW_PARENT)
+        SearchPage.BACK_WIDGET = "DashboardWidget"
+        self.WINDOW_PARENT.setCentralWidget(CrtRepPage)
+
+    def goToRepoPage(self,id):
+        print(id)
+        RepoPage = RepositoryPage.RepositoryPage(self.WINDOW_PARENT, repositoryId=id)
+        SearchPage.BACK_WIDGET = "DashboardWidget"
+        self.WINDOW_PARENT.setCentralWidget(RepoPage)
 
     def goToSearch(self):
         search = SearchPage.SearchPage(self.WINDOW_PARENT)
@@ -206,23 +215,17 @@ class DashboardWidget(QtGui.QWidget):
         self.WINDOW_PARENT.setCentralWidget(login)
 
     def handleLinkClicked2(self, url):
-        #print("clicked")
         myUrl = url.toString()
         if(myUrl.__contains__("Notif")):
             segment = url.spit("/")
-            #print("Notif identifier : "+segment[1])
         else :
             print("default")
 
     def fetchRepo(self):
         return self.createRepositoryElement()
 
-
     def setUsername(self,document):
         nameHolder = document.findAll("#namePlaceHolder").at(0)
         usernameHolder = document.findAll("#usernamePlaceHolder").at(0)
-        print("fasdf")
-        print(nameHolder.toInnerXml())
         document.findAll("namePlaceHolder").at(0).setPlainText(str(self.currentUser["first_name"]) + " " + str(self.currentUser["last_name"]))
         document.findAll("usernamePlaceHolder").at(0).setInnerXml(str(self.currentUser["username"]))
-        print("end")
