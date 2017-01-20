@@ -13,7 +13,6 @@ import MyWidgets
 from ui import CreateRepWidget
 from ui import CrtRepositoryWidget
 from ui import LoginWidget
-from ui import NewLogin
 from ui import RepositoryPage
 from ui import SearchPage
 
@@ -43,6 +42,9 @@ class DashboardWidget(QtGui.QWidget):
         self.loadRepository()
         self.loadPanel()
         dvider = MyWidgets.createLableColered(self,0,PARTITION*11 +10,self.WINDOW_WIDTH,100,"rgba(29,185,84,255)")
+        lable=MyWidgets.createLableColered(self,0,0,(1.5*self.WINDOW_WIDTH / 3)+1,50,"rgb(64, 64, 64)")
+        lable=MyWidgets.createLableColered(self,0,50,(1.5*self.WINDOW_WIDTH / 3)+1,1,"rgb(14, 164, 50)")
+        profile= MyWidgets.createTextLable("Profile & Notifications", self,10, 15, "white", "5")
         footer = MyWidgets.createTextLable(self.WINDOW_FOOTER_MESSAGE, self,PARTITION*1, PARTITION*11 +15, "white", "5")
         close=MyWidgets.createBorderLessButton("EXIT",self,710,0,self.WINDOW_PARENT.quit)
 
@@ -50,7 +52,7 @@ class DashboardWidget(QtGui.QWidget):
         self.view = QWebView(self)
         self.view.linkClicked.connect(self.handleLinkClicked)
         self.view.page().setLinkDelegationPolicy(QtWebKit.QWebPage.DelegateAllLinks)
-        self.view.move((1.5 * self.WINDOW_WIDTH / 3) + 1, 1)
+        self.view.move((1.5 * self.WINDOW_WIDTH / 3) + 1, 0)
         self.view.setMinimumSize((1.5*self.WINDOW_WIDTH / 3) - 2, PARTITION * 11 + 10)
         self.view.setMaximumSize((1.5*self.WINDOW_WIDTH / 3) - 2, PARTITION * 10 + 10)
         cwd = os.getcwd()
@@ -67,7 +69,7 @@ class DashboardWidget(QtGui.QWidget):
         self.view1 = QWebView(self)
         self.view1.linkClicked.connect(self.handleLinkClicked)
         self.view1.page().setLinkDelegationPolicy(QtWebKit.QWebPage.DelegateAllLinks)
-        self.view1.move(0, 0)
+        self.view1.move(0, 50)
         self.view1.setMinimumSize(1.5*self.WINDOW_WIDTH / 3, PARTITION * 11 )
         self.view1.setMaximumSize(1.5*self.WINDOW_WIDTH / 3, PARTITION * 10 )
         cwd = os.getcwd()
@@ -80,6 +82,7 @@ class DashboardWidget(QtGui.QWidget):
         doc = self.view1.page().mainFrame().documentElement()
         doc.findAll("#namePlaceHolder").at(0).setPlainText(str(self.currentUser["first_name"]) + " " + str(self.currentUser["last_name"]))
         doc.findAll("#usernamePlaceHolder").at(0).setPlainText(str(self.currentUser["username"]))
+        print(self.view.page().mainFrame().toHtml())
         self.view1.show()
 
     # ----- Notification ----
@@ -143,17 +146,17 @@ class DashboardWidget(QtGui.QWidget):
             <a class="header" href="{url}">{name}</a>
             <div class="description">{description}</div>
             <div class="row" style="display: flex; margin-top: 10px">
-                <div class = "col-xs-3" style="padding-left: 2px">
+                <div class = "col-xs-3" style="padding-left: 15px">
                     <a class="ui label {color}">{visibility}</a>
                 </div>
-                <div class = "col-xs-3" style="padding-left: 2px">
+                <div class = "col-xs-3" style="padding-left: 15px">
                     <div class="ui label">
                         <i class="star icon"></i> {StarCounter}
                     </div>
                 </div>
 
-                <div class = "col-xs-3" style="padding-left: 2px">
-                    <a class="ui blue label">makbn/Semantic...</a>
+                <div class = "col-xs-3" style="padding-left: 15px">
+                    <a class="ui blue label">{username}/{name2}</a>
                 </div>
             </div>
         </div>
@@ -170,7 +173,9 @@ class DashboardWidget(QtGui.QWidget):
                                         StarCounter=str(starCount["stars"]),
                                         description=i["description"][:10] + "...",
                                         visibility="private" if (int(i["is_private"]) == 1) else "public",
-                                        color=private_label if (int(i["is_private"]) == 1) else public_label
+                                        color=private_label if (int(i["is_private"]) == 1) else public_label,
+                                        username=Utils.UserManager.getCurrentUser()['username'],
+                                        name2=i["repo_name"]
             )
             outerHtml = outerHtml + temp
         return outerHtml
@@ -211,6 +216,7 @@ class DashboardWidget(QtGui.QWidget):
 
     def logOut(self):
         Utils.UserManager.resetUser()
+        from ui import NewLogin
         login= NewLogin.NewLoginWidget(self.WINDOW_PARENT)
         self.WINDOW_PARENT.setCentralWidget(login)
 
