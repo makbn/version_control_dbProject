@@ -118,7 +118,7 @@ class RepositoryPage(QtGui.QWidget):
 
         for answer in answerList :
             username=""
-            inner = template.format(Answer=answer["description"],UserId="user_id",Username=)
+            #inner = template.format(Answer=answer["description"],UserId="user_id",Username=)
 
     def fork(self):
         print("Forked")

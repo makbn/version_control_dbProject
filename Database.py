@@ -3,10 +3,10 @@ from datetime import datetime
 import pymysql
 
 hostname = "localhost"
-username = "dbProjectTester"
-password = "12341234"
+username = "root"
+password = "1234"
 databasename = "TESTDB"
-port = 3307
+port = 330
 tableName = ['user', 'repository', 'star', 'issue', 'watch', 'answer', 'likeRep' , 'notification']
 
 
@@ -95,7 +95,14 @@ class DatabaseMiddleWare(object):
                 "PRIMARY KEY (issue_id,answer_id,user_id),"
                 "FOREIGN KEY (issue_id) REFERENCES issue(id),"
                 "FOREIGN KEY (answer_id) REFERENCES answer(id),"
-                "FOREIGN KEY (user_id) REFERENCES user(id));"
+                "FOREIGN KEY (user_id) REFERENCES user(id));",
+            'follow' :"""CREATE TABLE follow(
+                      id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
+                      following_id INT NOT NULL,
+                      follower_id INT NOT NULL CHECK (follower_id!=following_id)
+                      FOREIGN KEY (following_id) REFERENCES user(id)
+                      FOREIGN KEY (follower_id) REFERENCES user(id)
+                      )"""
         }
 
         selectedQuery = switcher.get(tname, None)
@@ -108,13 +115,14 @@ class DatabaseMiddleWare(object):
     @staticmethod
     def initialize():
         try:
-            DatabaseMiddleWare.dbRef = pymysql.connect(host=hostname, user=username, passwd=password,
+            DatabaseMiddleWare.dbRef = pymysql.connect(host=hostname,port=3306, user=username, passwd=password,
                                                        db=databasename)
-            for s in tableName:
-                if not DatabaseMiddleWare.checkTableExists(s):
-                    DatabaseMiddleWare.createTable(s)
-                else :
-                    print("table exists" + s)
+            # for s in tableName:
+            #     if not DatabaseMiddleWare.checkTableExists(s):
+            #         print("create "+s)
+            #         DatabaseMiddleWare.createTable(s)
+            #     else :
+            #         print("table exists" + s)
         except:
             print("got to an exception")
             DatabaseMiddleWare.onException()
@@ -290,6 +298,32 @@ class DatabaseMiddleWare(object):
         cur.execute(query)
         container = cur.fetchall()
         return container
+
+    @staticmethod
+    def findIssueByName(name):
+        cur = DatabaseMiddleWare.dbRef.cursor(DatabaseMiddleWare.curType)
+        query="SELECT title,repo_name,i.description,i.id as iid,r.id as rid from issue i ,repository r WHERE i.title LIKE '%{title}%' AND r.is_private=0 AND r.id=i.rep_id; ".format(title=name)
+        print("find Issue " + query)
+        cur.execute(query)
+        result=cur.fetchall()
+        return result
+
+    @staticmethod
+    def findUserByName(name):
+        cur = DatabaseMiddleWare.dbRef.cursor(DatabaseMiddleWare.curType)
+        query = "SELECT * from user WHERE username LIKE '%{name}%' OR first_name LIKE '%{name}%' OR last_name LIKE '%{name}%' ; ".format(name=name)
+        print("find user= "+query)
+        cur.execute(query)
+        result = cur.fetchall()
+        return result
+
+    @staticmethod
+    def findRepositoryByName(name):
+        cur = DatabaseMiddleWare.dbRef.cursor(DatabaseMiddleWare.curType)
+        query = "SELECT repo_name,description,username,u.id as uid,r.id as rid from repository r ,user u WHERE repo_name LIKE '%{name}%'AND r.is_private=0 and u.id=r.owner_id; ".format(name=name)
+        cur.execute(query)
+        result = cur.fetchall()
+        return result
 
     @staticmethod
     def getRepositoryByNameId(name,owner_id):
