@@ -26,15 +26,13 @@ class RepositoryPage(QtGui.QWidget):
     repositoryName = ""
     repositoryId = ""
 
-    def __init__(self,parent=None , repositoryId=None , repositoryName=None):
+    def __init__(self,parent=None , repositoryId=None):
         super(RepositoryPage, self).__init__(parent)
         self.WINDOW_PARENT=parent
         self.layout = QtGui.QHBoxLayout()
         self.repositoryId = repositoryId
-        self.repositoryName = repositoryName
         print(self.repositoryName)
         self.addWidgets()
-
 
     def loadSplash(self):
         self.view = QWebView(self)
@@ -52,7 +50,6 @@ class RepositoryPage(QtGui.QWidget):
         self.fillTheDocument(document=document)
         print(frame.toHtml())
         self.view.show()
-
 
     def fillTheDocument(self , document=None):
         if document == None :
@@ -90,7 +87,6 @@ class RepositoryPage(QtGui.QWidget):
 
     def like(self):
         print("liked")
-
 
     def back(self):
         back=Utils.UIHelper.backPressHandler(BACK_WIDGET,self.WINDOW_PARENT)

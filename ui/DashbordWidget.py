@@ -59,6 +59,7 @@ class DashboardWidget(QtGui.QWidget):
         self.pageDocument = document
         #print(document.findAll("#repository_list").count())
         repoHtml = self.fetchRepo()
+        print(repoHtml)
         document.findAll("#repository_list").at(0).setInnerXml(repoHtml)
         self.view.show()
 
@@ -160,14 +161,17 @@ class DashboardWidget(QtGui.QWidget):
         <div></div>
         """
         repoList = DatabaseMiddleWare.getAllRepoOfTheUser(self.currentUser)
+
         for i in repoList :
-            temp=innerHTML.format(id=str(i["id"]),
-                                       url="/" + str(i["id"]),
-                                       starcount=i["stars"],
-                                       name=i["repo_name"],
-                                       description=i["description"][:10] + "...",
-                                       visibility="private" if (int(i["is_private"]) == 1) else "public",
-                                       color=private_label if (int(i["is_private"]) == 1) else public_label
+            print(i)
+            starCount = DatabaseMiddleWare.getStarCount(i["id"])
+            temp=innerHTML.format(      id=str(i["id"]),
+                                        url="/" + str(i["id"]),
+                                        name=i["repo_name"],
+                                        starcount=starCount,
+                                        description=i["description"][:10] + "...",
+                                        visibility="private" if (int(i["is_private"]) == 1) else "public",
+                                        color=private_label if (int(i["is_private"]) == 1) else public_label
             )
             outerHtml = outerHtml + temp
         #print(outerHtml)

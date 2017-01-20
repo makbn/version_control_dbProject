@@ -52,6 +52,13 @@ class DatabaseMiddleWare(object):
         return record
 
     @staticmethod
+    def getStarCount(repID):
+        cur = DatabaseMiddleWare.dbRef.cursor(DatabaseMiddleWare.curType)
+        cur.execute("SELECT count(*) AS stars FROM star WHERE rep_id = {RepoID}".format(RepoID=repID))
+        record = cur.fetchone()
+        return record
+
+    @staticmethod
     def getUsersNumber():
         cur = DatabaseMiddleWare.dbRef.cursor(DatabaseMiddleWare.curType)
         cur.execute(
@@ -97,6 +104,7 @@ class DatabaseMiddleWare(object):
         cur = DatabaseMiddleWare.dbRef.cursor(DatabaseMiddleWare.curType)
         insertQuery = "INSERT INTO user(username,password,email,first_name,last_name,gender,question_number,answer)" \
                       "VALUES ('{username}','{password}','{email}','{first_name}','{last_name}','{gender}',1,'gogogol')"
+
         insertQueryfilled = insertQuery.format( username=user["username"],
                                                 email=user["email"],
                                                 password=user["password"],
@@ -126,7 +134,7 @@ class DatabaseMiddleWare(object):
                     "answer VARCHAR (150) NOT NULL);",
 
             'repository': "CREATE TABLE repository ("
-                          "id int PRIMARY KEY,"
+                          "id int PRIMARY KEY AUTO_INCREMENT,"
                           "repo_name VARCHAR (120) UNIQUE NOT NULL,"
                           "description VARCHAR (300),"
                           "is_private INT(1) DEFAULT 0,"
@@ -136,20 +144,22 @@ class DatabaseMiddleWare(object):
                           "create_date DATE,"
                           "FOREIGN KEY (owner_id) REFERENCES user(id));",
 
-            'star': "CREATE TABLE star (id int PRIMARY KEY,"
+            'star': "CREATE TABLE star ("
+                    "id int PRIMARY KEY AUTO_INCREMENT,"
                     "rep_id INT NOT NULL,"
                     "user_id INT NOT NULL,"
                     "FOREIGN KEY (user_id) REFERENCES user(id), "
                     "FOREIGN KEY (rep_id) REFERENCES repository(id));",
 
-            'watch': "CREATE TABLE watch (id int PRIMARY KEY,"
+            'watch': "CREATE TABLE watch ("
+                     "id int PRIMARY KEY AUTO_INCREMENT,"
                      "rep_id INT NOT NULL,"
                      "user_id INT NOT NULL,"
                      "FOREIGN  KEY  (user_id) REFERENCES  user(id),"
                      "FOREIGN  Key (rep_id) REFERENCES repository(id));",
 
             'issue': "CREATE TABLE issue ("
-                     "id INT PRIMARY KEY,"
+                     "id INT PRIMARY KEY AUTO_INCREMENT,"
                      "title VARCHAR(45) NOT NULL,"
                      "issue_type INT NOT NULL DEFAULT 1,"
                      "description VARCHAR (500) NOT NULL ,"
@@ -161,7 +171,7 @@ class DatabaseMiddleWare(object):
 
             'notification':
                 "CREATE TABLE notification ( "
-                "id INT PRIMARY KEY , "
+                "id INT PRIMARY KEY AUTO_INCREMENT, "
                 "user_id INT NOT NULL ,"
                 "title VARCHAR(45) NOT NULL, "
                 "description VARCHAR (200) NOT NULL,"
@@ -173,7 +183,7 @@ class DatabaseMiddleWare(object):
 
             'answer':
                 "CREATE TABLE answer ("
-                "id INT PRIMARY  KEY , "
+                "id INT PRIMARY  KEY AUTO_INCREMENT, "
                 "user_id INT NOT NULL ,"
                 "issue_id INT NOT  NULL ,"
                 "title VARCHAR(45) NOT  NULL,"
@@ -185,7 +195,7 @@ class DatabaseMiddleWare(object):
 
             'likeRep':
                 "CREATE TABLE likeRep("
-                "issue_id INT NOT NULL,"
+                "issue_id INT NOT NULL AUTO_INCREMENT,"
                 "answer_id INT NOT NULL ,"
                 "user_id INT NOT NULL,"
                 "PRIMARY KEY (issue_id,answer_id,user_id),"
@@ -244,27 +254,27 @@ class DatabaseMiddleWare(object):
     def getAllRepoByName(name):
         print("fetching repo by name")
         cur = DatabaseMiddleWare.dbRef.cursor(DatabaseMiddleWare.curType)
-        queryTemp = "SELECT r1.id repo_id ,us1.id user_id, repo_name , count(*) stars , is_private , description , first_name , last_name " \
-                "FROM repository r1,star s1,user us1 " \
-                "WHERE us1.id = r1.owner_id AND r1.id=s1.rep_id AND repo_name = '{repoName}' GROUP BY r1.id;"
+        queryTemp = "SELECT r1.id repo_id ,us1.id user_id, repo_name , is_private , description , first_name , last_name " \
+                "FROM repository r1,user us1 " \
+                "WHERE us1.id = r1.owner_id  AND repo_name = '{repoName}' GROUP BY r1.id;"
         query = queryTemp.format(repoName = name)
+        print(query)
         cur.execute(query)
         container = cur.fetchall()
-        print(container[0])
-        print(container[0]['repo_name'])
         return container
 
     @staticmethod
     def getAllRepoOfTheUser(user):
         cur = DatabaseMiddleWare.dbRef.cursor(DatabaseMiddleWare.curType)
 
-        querytemp = "SELECT r1.id , repo_name , count(*) stars , is_private , description " \
-                "FROM repository r1,star s1 " \
-                "WHERE r1.id=s1.rep_id AND r1.owner_id={id} GROUP BY r1.id;"
+        querytemp = "SELECT r1.id , repo_name , is_private , description " \
+                "FROM repository r1 " \
+                "WHERE r1.owner_id={id} GROUP BY r1.id;"
         query = querytemp.format(id=user["id"])
         print(query)
         cur.execute(query)
         temp = cur.fetchall()
+        print("fetched"+str(temp))
         return temp
 
     def triggers(self):
