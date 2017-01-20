@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+    <link rel="stylesheet"
+          href="css/createRep1.css">
+    <link rel="stylesheet" href="css/scrollbar.css">
+    <link rel="stylesheet" href="css/font-awesome.css">
+
+</head>
+
+<body style="background-color: #2d2d30;color: whitesmoke;overflow:hidden; padding-right: -50px">
+
+<header class="navbar navbar-fixed-top navbar-gitlab">
+    <div class="container-fluid">
+        <div class="header-content">
+
+            <button class="navbar-toggle" type="button">
+                <span class="sr-only">Toggle navigation</span>
+                <i class="fa fa-ellipsis-v"></i>
+            </button>
+            <div class="navbar-collapse collapse">
+                <ul class="nav navbar-nav">
+
+                </ul>
+            </div>
+            <h1 class="title"><a>Create New Repository</a></h1>
+
+        </div>
+    </div>
+</header>
+
+
+<div class="page-with-sidebar">
+
+
+
+    </div>
+    <div class="content-wrapper" style="background-color: #2d2d30;color: whitesmoke">
+
+        <div class="alert-wrapper">
+
+
+            <div class="flash-container flash-container-page">
+            </div>
+
+
+        </div>
+        <div class="container-fluid container-limited " style="background-color: #2d2d30;color: whitesmoke">
+            <div class="content" id="content-body">
+                <div class="project-edit-container">
+                    <div class="project-edit-errors">
+
+
+                    </div>
+                    <div class="row prepend-top-default">
+                        <div class="col-lg-3 profile-settings-sidebar">
+                        </div>
+                        <div class="col-lg-9">
+                            <form class="new_project" id="new_project" action="/projects" accept-charset="UTF-8"
+                                  method="post"><input name="utf8" value="✓" type="hidden"><input
+                                    name="authenticity_token"
+                                    value="UQrq/TManeQHDr2b/fhk7oZp4D5YkuQt1512dmnSuJqkHV3hqjPLmU9/38AOGRM1TYNF4yGUZEBQPSrditl/Ug=="
+                                    type="hidden">
+                                <fieldset class="append-bottom-0">
+                                    <div class="form-group col-xs-12 col-sm-6">
+                                        <label class="label-light" for="project_namespace_id"><span>
+Project path
+</span>
+                                        </label>
+                                        <div class="input-group-addon">
+                                            <div>
+                                                <div id="username_field" style="font-size:20px;">{username}</div>
+
+                                                <select class="select2 js-select-namespace" tabindex="-1" name="project[namespace_id]" title="
+Project path
+
+
+Project name
+
+" style="display: none;" id="project_namespace_id">
+                                                    <optgroup label="Groups">
+                                                        <option data-options-parent="groups" value="478086">
+                                                            AI-Challeng-2016
+                                                        </option>
+                                                        <option data-options-parent="groups" value="475325">DS_2016
+                                                        </option>
+                                                        <option data-options-parent="groups" value="781003">
+                                                            FamilyDeskApp
+                                                        </option>
+                                                        <option data-options-parent="groups" value="785729">Game_GP
+                                                        </option>
+                                                        <option data-options-parent="groups" value="774063">
+                                                            SignalGo-Group
+                                                        </option>
+                                                        <option data-options-parent="groups" value="520387">
+                                                            atibookGroup
+                                                        </option>
+                                                        <option data-options-parent="groups" value="284713">dibdamini
+                                                        </option>
+                                                        <option data-options-parent="groups" value="655506">
+                                                            myInstaServer
+                                                        </option>
+                                                        <option data-options-parent="groups" value="345731">pulsedev
+                                                        </option>
+                                                        <option data-options-parent="groups" value="189688">whiteapp
+                                                        </option>
+                                                    </optgroup>
+                                                    <optgroup label="Users">
+                                                        <option data-options-parent="users" selected="selected" value="189771">makbn
+                                                        </option>
+                                                    </optgroup>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group col-xs-12 col-sm-6 project-path">
+                                        <label class="label-light" for="project_namespace_id"><span>
+Project name
+</span>
+                                        </label><input placeholder="my-awesome-project" class="form-control" tabindex="2" autofocus="autofocus" required="required" name="project[path]" id="project_path" type="text">
+                                    </div>
+                                </fieldset>
+
+                                <div class="project-import js-toggle-container">
+
+
+                                </div>
+                                <div class="form-group">
+                                    <label class="label-light" for="project_description">Project description
+
+                                    </label><textarea placeholder="Description format" class="form-control" rows="3"
+                                                      maxlength="250" name="project[description]"
+                                                      id="project_description"></textarea>
+                                </div>
+                                <div class="form-group project-visibility-level-holder">
+                                    <label class="label-light">Visibility Level
+
+                                    </label>
+                                    <div class="form-group project-visibility-level-holder">
+                                        <label class="control-label" for="project_visibility_level">
+                                            <a href="/help/public_access/public_access"></a>
+                                        </label>
+                                        <div class="col-sm-10">
+                                            <div class="radio">
+                                                <label for="project_visibility_level_0"><input value="0"
+                                                                                               checked="checked"
+                                                                                               name="project[visibility_level]"
+                                                                                               id="project_visibility_level_0"
+                                                                                               type="radio">
+                                                    <i class="fa fa-lock fa-fw"></i>
+                                                    <div class="option-title">
+                                                        Private
+                                                    </div>
+                                                    <div class="option-descr">
+                                                        Project access must be granted explicitly to each user.
+                                                    </div>
+                                                </label></div>
+
+                                            <div class="radio">
+                                                <label for="project_visibility_level_20"><input value="20"
+                                                                                                name="project[visibility_level]"
+                                                                                                id="project_visibility_level_20"
+                                                                                                type="radio">
+                                                    <i class="fa fa-globe fa-fw"></i>
+                                                    <div class="option-title">
+                                                        Public
+                                                    </div>
+                                                    <div class="option-descr">
+                                                        The project can be cloned without any authentication.
+                                                    </div>
+                                                </label></div>
+
+                                        </div>
+                                    </div>
+
+                                </div>
+                                <a  href="/createRep" onclick="createRepository()" class="btn btn-create project-submit"
+                                    tabindex="4" type="submit">Create</a>
+                                <a class="btn btn-cancel" href="/back">Cancel</a>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
+
+            </div>
+        </div>
+    </div>
+</div>
+
+ </div>
+       <div class="alert alert-danger alert-dismissible" role="alert" id="alert" style="visibility: hidden;margin: 16px">
+    <button type="button" onclick="toggle()" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+    <strong>Something is wrong with your repository information!</strong> please check your name and description!
+    </div>
+    </div>
+
+    <p class="getRepName" id="getRepName" hidden>Email Hidden.</p>
+    <p class="getRepDesc" id="getRepDesc" hidden>Lastname Hidden.</p>
+    <p class="getRepVisibility" id="getRepVisibility" hidden>fistname Hidden.</p>
+
+    <script>
+        function createRepository() {
+            var RepName = document.getElementById("project_path").value;
+            var RepDesc = document.getElementById("project_description").value;
+            var isPublic = document.getElementById("project_visibility_level_20").checked;
+            var isPrivate = document.getElementById("project_visibility_level_0").checked;
+
+            if(isPublic) document.getElementById("getRepVisibility").innerHTML = "public"
+            else if (isPrivate)document.getElementById("getRepVisibility").innerHTML = "private"
+
+            document.getElementById("getRepName").innerHTML = RepName ;
+            document.getElementById("getRepDesc").innerHTML = RepDesc;
+        }
+    </script>
+    <script>
+        function show() {
+            var x = document.getElementById('alert');
+            x.style.visibility = 'visible';
+        }
+        function hide() {
+            var x = document.getElementById('alert');
+            x.style.visibility = 'hidden';
+        }
+    </script>
+</body>
+</html>

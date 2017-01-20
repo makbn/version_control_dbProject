@@ -4,7 +4,7 @@ import pymysql
 
 hostname = "localhost"
 username = "dbProjectTester"
-password = "12341234"
+password = "1234"
 databasename = "TESTDB"
 port = 3307
 tableName = ['user', 'repository', 'star', 'issue', 'watch', 'answer', 'likeRep' , 'notification']
@@ -20,10 +20,9 @@ class DatabaseMiddleWare(object):
         print("initializing DB")
         try:
             print("Trying to connect to DB...")
-            DatabaseMiddleWare.dbRef = pymysql.connect(host=hostname, user=username, passwd=password,
+            DatabaseMiddleWare.dbRef = pymysql.connect(host=hostname,port=3307, user=username, passwd=password,
                                                        db=databasename)
             print("Connected")
-            print("connected")
             for s in tableName:
                 print("connected2")
                 if not DatabaseMiddleWare.checkTableExists(s):
@@ -32,8 +31,8 @@ class DatabaseMiddleWare(object):
                 else :
                     print("table exists" + s)
 
-        except:
-            print("got to an exception")
+        except Exception as e:
+            print("got to an exception= "+ str(e))
             DatabaseMiddleWare.onException()
 
     @staticmethod
