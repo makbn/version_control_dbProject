@@ -10,6 +10,8 @@ from Database import DatabaseMiddleWare
 import Utils
 from models import Repository
 import MyWidgets
+from ui import LoginWidget
+from ui import NewLogin
 from ui import SearchPage
 
 PARTITION = 50
@@ -51,7 +53,7 @@ class DashboardWidget(QtGui.QWidget):
         self.view.setMaximumSize((1.5*self.WINDOW_WIDTH / 3) - 2, PARTITION * 10 + 10)
         cwd = os.getcwd()
         self.view.load(QUrl.fromLocalFile(os.path.join(cwd,"resource","RepositoryList.html")))
-        self.WINDOW_PARENT.QApplicationRef.processEvents()
+        #self.WINDOW_PARENT.QApplicationRef.processEvents()
         frame = self.view.page().mainFrame()
         document = frame.documentElement()
         self.pageDocument = document
@@ -157,7 +159,7 @@ class DashboardWidget(QtGui.QWidget):
     </div>
         <div></div>
         """
-        repoList = DatabaseMiddleWare.getAllRepo(self.currentUser)
+        repoList = DatabaseMiddleWare.getAllRepoOfTheUser(self.currentUser)
         for i in repoList :
             temp=innerHTML.format(id=str(i["id"]),
                                        url="/" + str(i["id"]),
@@ -178,7 +180,14 @@ class DashboardWidget(QtGui.QWidget):
             print("Notif identifier : " + myUrl)
             segment = myUrl
         elif myUrl.__contains__("search"):
+            print("searching ... ")
             self.goToSearch()
+        elif myUrl.__contains__("logOut"):
+            print("Loging out ...")
+            self.logOut()
+        elif myUrl.__contains__("createRepo"):
+            print("Creating repo...")
+            self.gotoCreateRepo() #TODO : READY UP THE REPO CREATING PAGE
         else :
             print("default")
 
@@ -186,6 +195,11 @@ class DashboardWidget(QtGui.QWidget):
         search = SearchPage.SearchPage(self.WINDOW_PARENT)
         SearchPage.BACK_WIDGET = "DashboardWidget"
         self.WINDOW_PARENT.setCentralWidget(search)
+
+    def logOut(self):
+        Utils.UserManager.resetUser()
+        login= NewLogin.NewLoginWidget(self.WINDOW_PARENT)
+        self.WINDOW_PARENT.setCentralWidget(login)
 
     def handleLinkClicked2(self, url):
         #print("clicked")

@@ -232,7 +232,30 @@ class DatabaseMiddleWare(object):
         cur.execute(query)
 
     @staticmethod
-    def getAllRepo(user):
+    def getIssueNumber():
+        cur = DatabaseMiddleWare.dbRef.cursor(DatabaseMiddleWare.curType)
+        cur.execute(
+            "SELECT count(*) AS count FROM issue")
+        record = cur.fetchall()
+        return record
+
+
+    @staticmethod
+    def getAllRepoByName(name):
+        print("fetching repo by name")
+        cur = DatabaseMiddleWare.dbRef.cursor(DatabaseMiddleWare.curType)
+        queryTemp = "SELECT r1.id repo_id ,us1.id user_id, repo_name , count(*) stars , is_private , description , first_name , last_name " \
+                "FROM repository r1,star s1,user us1 " \
+                "WHERE us1.id = r1.owner_id AND r1.id=s1.rep_id AND repo_name = '{repoName}' GROUP BY r1.id;"
+        query = queryTemp.format(repoName = name)
+        cur.execute(query)
+        container = cur.fetchall()
+        print(container[0])
+        print(container[0]['repo_name'])
+        return container
+
+    @staticmethod
+    def getAllRepoOfTheUser(user):
         cur = DatabaseMiddleWare.dbRef.cursor(DatabaseMiddleWare.curType)
 
         querytemp = "SELECT r1.id , repo_name , count(*) stars , is_private , description " \
@@ -242,7 +265,6 @@ class DatabaseMiddleWare(object):
         print(query)
         cur.execute(query)
         temp = cur.fetchall()
-        print("DATA -> " + str(temp[1]["repo_name"]))
         return temp
 
     def triggers(self):
