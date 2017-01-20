@@ -21,8 +21,12 @@ class UserManager:
 
     @staticmethod
     def setCurrentUser(user):
-
         UserManager.current_user = user
+
+    @staticmethod
+    def resetUser():
+        UserManager.current_user=None
+
 
     @staticmethod
     def getCurrentUser():

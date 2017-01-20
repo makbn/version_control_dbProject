@@ -45,9 +45,9 @@ class SearchPage(QtGui.QWidget):
         self.WINDOW_PARENT.QApplicationRef.processEvents()
         frame = self.view.page().mainFrame()
         self.document = frame.documentElement()
+        self.fillTheLeftMenu(document=self.document)
+        self.WINDOW_PARENT.QApplicationRef.processEvents()
         self.view.show()
-        self.fillTheListTempo(document=self.document)
-
 
     def handleLinkClicked(self, url):
         action=url.toString()
@@ -57,47 +57,42 @@ class SearchPage(QtGui.QWidget):
             self.search(query=query )
 
 
+    def fillTheLeftMenu(self,document):
+        repCount = DatabaseMiddleWare.getRepoNumber()
+        userCount = DatabaseMiddleWare.getUsersNumber()
+        issueCount = DatabaseMiddleWare.getIssueNumber()
+        document.findAll("#RepoCounter").at(0).setPlainText(str(repCount[0]['count']))
+        document.findAll("#UserCounter").at(0).setPlainText(str(userCount[0]['count']))
+        document.findAll("#IssueCounter").at(0).setPlainText(str(issueCount[0]['count']))
 
-    def fillTheListTempo(self , document=None):
-        inner = ""
-        for i in range(0,10) :
-            print(i)
-            username = "Navid" + str(randint(0,10))
-            repoId = str(randint(0,10))
-            userId = str(randint(15 , 25))
-            projectName= "My Repo" + str(randint(0,5))
-            searchResult = {
-                "Username" : username ,
-                "RepoId" : repoId ,
-                "ProjectName" : projectName ,
-                "UserId" : userId
-            }
-            inner = inner + self.addToSearchResult(searchResult=searchResult , document=document)
-        document.findAll("#SearchResultList").at(0).setInnerXml(inner)
+    def fillTheListTempo(self ,fetchedResult, document=None):
+        outer = ""
+        searchResultTemplate = """<div class="searchResult" >
+                                Project Name :
+                                <a href="Repository/{RepoId}" class="Project-Name" style="margin: 5px">{ProjectName}</a>
+                                <br>
+                                User :
+                                <a href="UserProfile/{UserId}" class="Username" style="margin: 5px">{Username}</a>
+                                <hr></hr>
+                            </div>"""
+        for i in fetchedResult :
+            inner = ""
+            inner = searchResultTemplate.format(ProjectName = i['repo_name'],
+                                                UserId = str(i['user_id']) ,
+                                                RepoId = str(i['repo_id']) ,
+                                                Username = i['first_name']+ " " + i['last_name'])
+
+            outer = outer + inner
+        document.findAll("#SearchResultList").at(0).setInnerXml(outer)
 
 
 
 
     def search(self,query) :
-        print("database searching " + str(query))
-        print("send the fetched data to addToSearchResult function one bye one ... ")
-        self.fillTheListTempo(document=self.document)
+        searchResult = DatabaseMiddleWare.getAllRepoByName(query)
+        self.fillTheListTempo(fetchedResult=searchResult,document=self.document)
         pass
 
-    def addToSearchResult(self,searchResult , document):
-        searchResultTemplate = """<div class="searchResult" style="color: whitesmoke;">
-                        Project Name :
-                        <a href="Repository/{RepoId}" class="Project-Name" style="margin: 5px">{ProjectName}</a>
-                        <br>
-                        User :
-                        <a href="UserProfile/{UserId}" class="Username" style="margin: 5px">{Username}</a>
-                        <hr></hr>
-                    </div>"""
-        newElement = searchResultTemplate.format(ProjectName = searchResult["ProjectName"] ,
-                                                      Username= searchResult["Username"] ,
-                                                      RepoId= searchResult["RepoId"] ,
-                                                      UserId = searchResult["UserId"])
-        return newElement
 
     def addWidgets(self):
         self.background=MyWidgets.createBackground(self)
