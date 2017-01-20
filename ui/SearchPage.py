@@ -4,13 +4,10 @@ import sys
 from PySide.QtWebKit import QWebView, QWebPage
 
 import MyWidgets
-from ui import MainWidget
 from PySide.QtCore import *
-from PySide.QtGui import *
-from PySide.QtDeclarative import *
 from PySide import *
-from random import  randint
 from Database import DatabaseMiddleWare
+from ui import RepositoryPage
 
 PARTITION = 50
 image_size = 64
@@ -55,7 +52,9 @@ class SearchPage(QtGui.QWidget):
         if action.__contains__("DoSearch") :
             query = self.document.findAll("#getSearchQuery").at(0).toPlainText()
             self.search(query=query )
-
+        elif action.__contains__("Repository") :
+            self.gotoRepoPage(str(action).split("-")[1])
+            print("goto repo page " + str(action).split("-")[1])
 
     def fillTheLeftMenu(self,document):
         repCount = DatabaseMiddleWare.getRepoNumber()
@@ -69,10 +68,10 @@ class SearchPage(QtGui.QWidget):
         outer = ""
         searchResultTemplate = """<div class="searchResult" >
                                 Project Name :
-                                <a href="Repository/{RepoId}" class="Project-Name" style="margin: 5px">{ProjectName}</a>
+                                <a href="Repository-{RepoId}" class="Project-Name" style="margin: 5px">{ProjectName}</a>
                                 <br>
                                 User :
-                                <a href="UserProfile/{UserId}" class="Username" style="margin: 5px">{Username}</a>
+                                <a href="UserProfile-{UserId}" class="Username" style="margin: 5px">{Username}</a>
                                 <hr></hr>
                             </div>"""
         for i in fetchedResult :
@@ -85,14 +84,10 @@ class SearchPage(QtGui.QWidget):
             outer = outer + inner
         document.findAll("#SearchResultList").at(0).setInnerXml(outer)
 
-
-
-
     def search(self,query) :
         searchResult = DatabaseMiddleWare.getAllRepoByName(query)
         self.fillTheListTempo(fetchedResult=searchResult,document=self.document)
         pass
-
 
     def addWidgets(self):
         self.background=MyWidgets.createBackground(self)
@@ -101,6 +96,11 @@ class SearchPage(QtGui.QWidget):
         footer = MyWidgets.createTextLable(self.WINDOW_FOOTER_MESSAGE, self,PARTITION*1, PARTITION*11 +15, "white", "5")
         close=MyWidgets.createBorderLessButton("EXIT",self,710,0,self.WINDOW_PARENT.quit)
         back=MyWidgets.createBorderLessButton("Back",self,630,0,self.back)
+
+    def gotoRepoPage(self,id):
+        RepoPage = RepositoryPage.RepositoryPage(self.WINDOW_PARENT,repositoryId=id)
+        SearchPage.BACK_WIDGET = "DashboardWidget"
+        self.WINDOW_PARENT.setCentralWidget(RepoPage)
 
     def back(self):
         import Utils

@@ -2,16 +2,11 @@ import os
 import sys
 
 from PySide.QtWebKit import QWebView, QWebPage
-from sympy.printing.pretty.pretty_symbology import sup
 
 import MyWidgets
 import Utils
-from ui import MainWidget
 from PySide.QtCore import *
-from PySide.QtGui import *
-from PySide.QtDeclarative import *
 from PySide import *
-from random import  randint
 from Database import DatabaseMiddleWare
 
 PARTITION = 50
@@ -97,14 +92,16 @@ class CreateRepWidget(QtGui.QWidget):
         if len(desc)<1 or len(name)<1:
             frame.evaluateJavaScript('show();')
         else:
-            repository=DatabaseMiddleWare.getEntityByKey(tableName="repository",owner_id=user_id,repo_name=name)
-            if repository is not None:
+            repository=DatabaseMiddleWare.getRepositoryByNameId(name,user_id)
+
+            if repository is not None and repository["owner_id"]==user_id:
                 frame.evaluateJavaScript('show();')
             else:
                 try:
                     frame.evaluateJavaScript('hide();')
                     DatabaseMiddleWare.createRepository(name,user_id,desc,visibility)
+                    self.back()
                 except Exception as e:
                     frame.evaluateJavaScript('show();')
-                    print(str(e))
+                    print("exception=" +str(e))
 

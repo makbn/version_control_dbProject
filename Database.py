@@ -16,6 +16,96 @@ class DatabaseMiddleWare(object):
     curType = pymysql.cursors.DictCursor
 
     @staticmethod
+    def createTable(tname):
+        cur = DatabaseMiddleWare.dbRef.cursor(DatabaseMiddleWare.curType)
+        switcher = {
+            'user': "CREATE TABLE  user ("
+                    "id int PRIMARY KEY AUTO_INCREMENT,"
+                    "username VARCHAR (20) UNIQUE NOT NULL,"
+                    "password VARCHAR (20) NOT NULL ,"
+                    "email VARCHAR (100) UNIQUE NOT NULL,"
+                    "first_name VARCHAR (25) NOT NULL,"
+                    "last_name VARCHAR (45) NOT NULL,"
+                    "gender INT(1) DEFAULT 1 NOT NULL,"
+                    "question_number INT(1) NOT NULL,"
+                    "answer VARCHAR (150) NOT NULL);",
+
+            'repository': "CREATE TABLE repository ("
+                          "id int PRIMARY KEY AUTO_INCREMENT,"
+                          "repo_name VARCHAR (120) UNIQUE NOT NULL,"
+                          "description VARCHAR (300),"
+                          "is_private INT(1) DEFAULT 0,"
+                          "is_forked INT(1) DEFAULT 0,"
+                          "source_id INT DEFAULT -1,"
+                          "owner_id INT NOT NULL,"
+                          "create_date DATE,"
+                          "FOREIGN KEY (owner_id) REFERENCES user(id));",
+
+            'star': "CREATE TABLE star ("
+                    "id int PRIMARY KEY AUTO_INCREMENT,"
+                    "rep_id INT NOT NULL,"
+                    "user_id INT NOT NULL,"
+                    "FOREIGN KEY (user_id) REFERENCES user(id), "
+                    "FOREIGN KEY (rep_id) REFERENCES repository(id));",
+
+            'watch': "CREATE TABLE watch ("
+                     "id int PRIMARY KEY AUTO_INCREMENT,"
+                     "rep_id INT NOT NULL,"
+                     "user_id INT NOT NULL,"
+                     "FOREIGN  KEY  (user_id) REFERENCES  user(id),"
+                     "FOREIGN  Key (rep_id) REFERENCES repository(id));",
+
+            'issue': "CREATE TABLE issue ("
+                     "id INT PRIMARY KEY AUTO_INCREMENT,"
+                     "title VARCHAR(45) NOT NULL,"
+                     "issue_type INT NOT NULL DEFAULT 1,"
+                     "description VARCHAR (500) NOT NULL ,"
+                     "rep_id INT NOT NULL ,"
+                     "user_id INT NOT NULL ,"
+                     "is_open INT NOT NULL DEFAULT 1,"
+                     "FOREIGN KEY  (user_id) REFERENCES user(id),"
+                     "FOREIGN KEY  (rep_id) REFERENCES repository(id));",
+
+            'notification':"CREATE TABLE notification ( "
+                "id INT PRIMARY KEY AUTO_INCREMENT, "
+                "user_id INT NOT NULL ,"
+                "title VARCHAR(45) NOT NULL, "
+                "description VARCHAR (200) NOT NULL,"
+                "link_id INT NOT NULL ,"
+                "link_type INT(1) NOT NULL ,"
+                "is_read INT (1) DEFAULT 0 , "
+                "created_date DATE NOT NULL,"
+                "FOREIGN KEY (user_id) REFERENCES user(id));",
+
+            'answer':"CREATE TABLE answer ("
+                "id INT PRIMARY  KEY AUTO_INCREMENT, "
+                "user_id INT NOT NULL ,"
+                "issue_id INT NOT  NULL ,"
+                "title VARCHAR(45) NOT  NULL,"
+                "description VARCHAR(200) NOT  NULL,"
+                "is_correct INT(1) DEFAULT 0,"
+                "created_date DATE NOT NULL,"
+                "FOREIGN KEY (user_id) REFERENCES user(id),"
+                "FOREIGN KEY (issue_id) REFERENCES issue(id));",
+
+            'likeRep':"CREATE TABLE likeRep("
+                "issue_id INT NOT NULL AUTO_INCREMENT,"
+                "answer_id INT NOT NULL ,"
+                "user_id INT NOT NULL,"
+                "PRIMARY KEY (issue_id,answer_id,user_id),"
+                "FOREIGN KEY (issue_id) REFERENCES issue(id),"
+                "FOREIGN KEY (answer_id) REFERENCES answer(id),"
+                "FOREIGN KEY (user_id) REFERENCES user(id));"
+        }
+
+        selectedQuery = switcher.get(tname, None)
+        if selectedQuery is not None:
+            cur.execute(selectedQuery)
+        else:
+            print(tname + " is not a valid table")
+
+
+    @staticmethod
     def initialize():
         try:
             DatabaseMiddleWare.dbRef = pymysql.connect(host=hostname, user=username, passwd=password,
@@ -52,6 +142,13 @@ class DatabaseMiddleWare(object):
         return record
 
     @staticmethod
+    def getStarCount(repID):
+        cur = DatabaseMiddleWare.dbRef.cursor(DatabaseMiddleWare.curType)
+        cur.execute("SELECT count(*) AS stars FROM star WHERE rep_id = {RepoID}".format(RepoID=repID))
+        record = cur.fetchone()
+        return record
+
+    @staticmethod
     def getUsersNumber():
         cur = DatabaseMiddleWare.dbRef.cursor(DatabaseMiddleWare.curType)
         cur.execute(
@@ -60,13 +157,31 @@ class DatabaseMiddleWare(object):
         return record
 
     @staticmethod
+    def fetchIssuesForRepo(repo_id):
+        cur = DatabaseMiddleWare.dbRef.cursor(DatabaseMiddleWare.curType)
+        query = "SELECT * FROM issue is1 WHERE is1.rep_id={RepoID}".format(RepoID=repo_id)
+        cur.execute(query)
+        temp = cur.fetchall()
+        print(str(temp))
+        return temp
+
+    @staticmethod
+    def getTheAnswerOfIssue(my_issue_id):
+        cur = DatabaseMiddleWare.dbRef.cursor(DatabaseMiddleWare.curType)
+        query = "SELECT * FROM answer ans WHERE ans.issue_id = {IssueId}".format(IssueId=my_issue_id)
+        print(query)
+        cur.execute(query)
+        temp = cur.fetchall()
+        print(str(temp))
+        return temp
+
+    @staticmethod
     def fetchUser(username):
         usernameStr = str(username)
         cur = DatabaseMiddleWare.dbRef.cursor(DatabaseMiddleWare.curType)
         cur.execute("SELECT * FROM user WHERE username = '{username}'".format(username=usernameStr))
         record = cur.fetchone()
         return record
-
 
     @staticmethod
     def checkTableExists(tablename):
@@ -97,6 +212,7 @@ class DatabaseMiddleWare(object):
         cur = DatabaseMiddleWare.dbRef.cursor(DatabaseMiddleWare.curType)
         insertQuery = "INSERT INTO user(username,password,email,first_name,last_name,gender,question_number,answer)" \
                       "VALUES ('{username}','{password}','{email}','{first_name}','{last_name}','{gender}',1,'gogogol')"
+
         insertQueryfilled = insertQuery.format( username=user["username"],
                                                 email=user["email"],
                                                 password=user["password"],
@@ -111,96 +227,6 @@ class DatabaseMiddleWare(object):
 
 
     @staticmethod
-    def createTable( tname):
-        cur = DatabaseMiddleWare.dbRef.cursor(DatabaseMiddleWare.curType)
-        switcher = {
-            'user': "CREATE TABLE  user ("
-                    "id int PRIMARY KEY AUTO_INCREMENT,"
-                    "username VARCHAR (20) UNIQUE NOT NULL,"
-                    "password VARCHAR (20) NOT NULL ,"
-                    "email VARCHAR (100) UNIQUE NOT NULL,"
-                    "first_name VARCHAR (25) NOT NULL,"
-                    "last_name VARCHAR (45) NOT NULL,"
-                    "gender INT(1) DEFAULT 1 NOT NULL,"
-                    "question_number INT(1) NOT NULL,"
-                    "answer VARCHAR (150) NOT NULL);",
-
-            'repository': "CREATE TABLE repository ("
-                          "id int PRIMARY KEY,"
-                          "repo_name VARCHAR (120) UNIQUE NOT NULL,"
-                          "description VARCHAR (300),"
-                          "is_private INT(1) DEFAULT 0,"
-                          "is_forked INT(1) DEFAULT 0,"
-                          "source_id INT DEFAULT -1,"
-                          "owner_id INT NOT NULL,"
-                          "create_date DATE,"
-                          "FOREIGN KEY (owner_id) REFERENCES user(id));",
-
-            'star': "CREATE TABLE star (id int PRIMARY KEY,"
-                    "rep_id INT NOT NULL,"
-                    "user_id INT NOT NULL,"
-                    "FOREIGN KEY (user_id) REFERENCES user(id), "
-                    "FOREIGN KEY (rep_id) REFERENCES repository(id));",
-
-            'watch': "CREATE TABLE watch (id int PRIMARY KEY,"
-                     "rep_id INT NOT NULL,"
-                     "user_id INT NOT NULL,"
-                     "FOREIGN  KEY  (user_id) REFERENCES  user(id),"
-                     "FOREIGN  Key (rep_id) REFERENCES repository(id));",
-
-            'issue': "CREATE TABLE issue ("
-                     "id INT PRIMARY KEY,"
-                     "title VARCHAR(45) NOT NULL,"
-                     "issue_type INT NOT NULL DEFAULT 1,"
-                     "description VARCHAR (500) NOT NULL ,"
-                     "rep_id INT NOT NULL ,"
-                     "user_id INT NOT NULL ,"
-                     "is_open INT NOT NULL DEFAULT 1,"
-                     "FOREIGN KEY  (user_id) REFERENCES user(id),"
-                     "FOREIGN KEY  (rep_id) REFERENCES repository(id));",
-
-            'notification':
-                "CREATE TABLE notification ( "
-                "id INT PRIMARY KEY , "
-                "user_id INT NOT NULL ,"
-                "title VARCHAR(45) NOT NULL, "
-                "description VARCHAR (200) NOT NULL,"
-                "link_id INT NOT NULL ,"
-                "link_type INT(1) NOT NULL ,"
-                "is_read INT (1) DEFAULT 0 , "
-                "created_date DATE NOT NULL,"
-                "FOREIGN KEY (user_id) REFERENCES user(id));",
-
-            'answer':
-                "CREATE TABLE answer ("
-                "id INT PRIMARY  KEY , "
-                "user_id INT NOT NULL ,"
-                "issue_id INT NOT  NULL ,"
-                "title VARCHAR(45) NOT  NULL,"
-                "description VARCHAR(200) NOT  NULL,"
-                "is_correct INT(1) DEFAULT 0,"
-                "created_date DATE NOT NULL,"
-                "FOREIGN KEY (user_id) REFERENCES user(id),"
-                "FOREIGN KEY (issue_id) REFERENCES issue(id));",
-
-            'likeRep':
-                "CREATE TABLE likeRep("
-                "issue_id INT NOT NULL,"
-                "answer_id INT NOT NULL ,"
-                "user_id INT NOT NULL,"
-                "PRIMARY KEY (issue_id,answer_id,user_id),"
-                "FOREIGN KEY (issue_id) REFERENCES issue(id),"
-                "FOREIGN KEY (answer_id) REFERENCES answer(id),"
-                "FOREIGN KEY (user_id) REFERENCES user(id));"
-        }
-
-        selectedQuery = switcher.get(tname, None)
-        if selectedQuery is not None:
-            cur.execute(selectedQuery)
-        else:
-            print(tname + " is not a valid table")
-
-    @staticmethod
     def getEntityByKey(tableName, **kwargs):
         """
         Fetching a tuple from table with key
@@ -208,19 +234,32 @@ class DatabaseMiddleWare(object):
         cur = DatabaseMiddleWare.dbRef.cursor(DatabaseMiddleWare.curType)
         statement = ""
         for key in kwargs:
-            statement += key + "=" + kwargs[key] + " AND "
+            statement2 = "{column} = {''}"
+            statement += str(key) + "=" + str(kwargs[key]) + " AND "
         statement = statement[:-5]
+        print(statement)
         query = "SELECT * FROM " + tableName + " WHERE " + statement
         cur.execute(query)
         return cur.fetchall()
 
 
+
     @staticmethod
     def createRepository(repositoryName, user_id, description, is_private):
         cur = DatabaseMiddleWare.dbRef.cursor(DatabaseMiddleWare.curType)
-        date = datetime.datetime.now()
-        query = "INSERT INTO TABLE repository (repo_name,description,is_private,owner_id,create_date) VALUES(" + repositoryName + " , " + description + " , " + is_private + " , " + user_id + " , " + date + ")"
+        date = datetime.now()
+        query = "INSERT INTO repository(repo_name, description , is_private , is_forked , source_id , owner_id , create_date) " \
+                "values ('{RepoName}', '{Desc}' , {IsPrivate} , {IsForked},{SourceId} , {OwnerId} , '{CreateDate}');".format(RepoName=repositoryName,
+                                                                                                                           OwnerId=user_id,
+                                                                                                                           Desc=description,
+                                                                                                                           IsPrivate=is_private,
+                                                                                                                           IsForked=0,
+                                                                                                                           SourceId=-1,
+                                                                                                                           CreateDate=str(date)[:10])
+
+        print(query)
         cur.execute(query)
+        DatabaseMiddleWare.dbRef.commit()
 
     @staticmethod
     def forkRepository(source_id, user_id, is_private):
@@ -239,32 +278,52 @@ class DatabaseMiddleWare(object):
         record = cur.fetchall()
         return record
 
-
     @staticmethod
     def getAllRepoByName(name):
         print("fetching repo by name")
         cur = DatabaseMiddleWare.dbRef.cursor(DatabaseMiddleWare.curType)
-        queryTemp = "SELECT r1.id repo_id ,us1.id user_id, repo_name , count(*) stars , is_private , description , first_name , last_name " \
-                "FROM repository r1,star s1,user us1 " \
-                "WHERE us1.id = r1.owner_id AND r1.id=s1.rep_id AND repo_name = '{repoName}' GROUP BY r1.id;"
+        queryTemp = "SELECT r1.id repo_id ,us1.id user_id, repo_name , is_private , description , first_name , last_name " \
+                "FROM repository r1,user us1 " \
+                "WHERE us1.id = r1.owner_id  AND repo_name = '{repoName}' GROUP BY r1.id;"
         query = queryTemp.format(repoName = name)
+        print(query)
         cur.execute(query)
         container = cur.fetchall()
-        print(container[0])
-        print(container[0]['repo_name'])
         return container
+
+    @staticmethod
+    def getRepositoryByNameId(name,owner_id):
+        print("fetching repo by name")
+        cur = DatabaseMiddleWare.dbRef.cursor(DatabaseMiddleWare.curType)
+        queryTemp = "SELECT * FROM repository WHERE repo_name='"+name+"' AND owner_id="+str(owner_id)+";"
+        print("select= "+queryTemp)
+        cur.execute(queryTemp)
+        container = cur.fetchone()
+        print("container= "+str(container))
+        return container
+
+    @staticmethod
+    def fetchRepoDataById(id):
+        cur = DatabaseMiddleWare.dbRef.cursor(DatabaseMiddleWare.curType)
+        queryTemp = "SELECT * from repository WHERE id={RepoID}".format(RepoID=id)
+        print(queryTemp)
+        cur.execute(queryTemp)
+        temp = cur.fetchall()
+        print(temp)
+        return temp
 
     @staticmethod
     def getAllRepoOfTheUser(user):
         cur = DatabaseMiddleWare.dbRef.cursor(DatabaseMiddleWare.curType)
 
-        querytemp = "SELECT r1.id , repo_name , count(*) stars , is_private , description " \
-                "FROM repository r1,star s1 " \
-                "WHERE r1.id=s1.rep_id AND r1.owner_id={id} GROUP BY r1.id;"
+        querytemp = "SELECT  us1.first_name , us1.last_name ,r1.owner_id AS user_id, r1.id , repo_name , is_private , description " \
+                "FROM repository r1 , user us1 " \
+                "WHERE r1.owner_id={id} AND r1.owner_id = us1.id ;"
         query = querytemp.format(id=user["id"])
         print(query)
         cur.execute(query)
         temp = cur.fetchall()
+        print("fetched \n"+str(temp))
         return temp
 
     def triggers(self):
