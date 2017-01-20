@@ -166,9 +166,9 @@ class DatabaseMiddleWare(object):
         return temp
 
     @staticmethod
-    def getTheAnswerOfIssue(my_issue_id):
+    def getTheAnswerOfIssue(my_issue_id , ):
         cur = DatabaseMiddleWare.dbRef.cursor(DatabaseMiddleWare.curType)
-        query = "SELECT * FROM answer ans WHERE ans.issue_id = {IssueId}".format(IssueId=my_issue_id)
+        query = "SELECT * FROM answer ans,user us1 WHERE us1.id = ans.user_id AND ans.issue_id = {IssueId}".format(IssueId=my_issue_id)
         print(query)
         cur.execute(query)
         temp = cur.fetchall()
@@ -196,12 +196,13 @@ class DatabaseMiddleWare(object):
 
     @staticmethod
     def recoverPassword(qNumber,answer,email):
-        query="SELECT * FROM user WHERE user.email="+email
+        query="SELECT * FROM user WHERE user.email='{Email}'".format(Email=email)
         dbcur = DatabaseMiddleWare.dbRef.cursor(DatabaseMiddleWare.curType)
         dbcur.execute(query)
-        if dbcur.fetchone()[0]['question_number']==qNumber:
-            if dbcur.fetchone()[0]['answer']==answer:
-                return dbcur.fetchone()[0]['password'];
+        result = dbcur.fetchone()
+        if str(result['question_number'])==str(qNumber):
+            if result['answer']==str(answer):
+                return  ("Password is" + result['password'])
             else:
                 return "wrong answer dude!"
         else:
@@ -211,15 +212,17 @@ class DatabaseMiddleWare(object):
     def register(user):
         cur = DatabaseMiddleWare.dbRef.cursor(DatabaseMiddleWare.curType)
         insertQuery = "INSERT INTO user(username,password,email,first_name,last_name,gender,question_number,answer)" \
-                      "VALUES ('{username}','{password}','{email}','{first_name}','{last_name}','{gender}',1,'gogogol')"
+                      "VALUES ('{username}','{password}','{email}','{first_name}','{last_name}',1,{QuestionNumber},'{Answer}')"
 
         insertQueryfilled = insertQuery.format( username=user["username"],
                                                 email=user["email"],
                                                 password=user["password"],
                                                 first_name=user["firstname"],
-                                                gender=user["gender"],
+                                                QuestionNumber=user["question"],
+                                                Answer=user["answer"],
                                                 last_name=user["lastname"])
         try:
+            print(str(insertQueryfilled))
             cur.execute(insertQueryfilled)
             DatabaseMiddleWare.dbRef.commit()
         except:

@@ -135,16 +135,17 @@ class RecoverPasswordForm(QDialog):
         self.view.show()
         self.setStyleSheet("border-width: 0px; border-style: solid")
         #self.setWindowFlags(QtCore.Qt.FramelessWindowHint)
+
     def handleLinkClicked(self, url):
         action=url.toString()
         if action.__contains__("recover"):
             frame = self.view.page().mainFrame()
             document = frame.documentElement()
             try:
-                answer = document.findAll(".getanswer").at(0).toPlainText()
-                email = document.findAll(".getemail").at(0).toPlainText()
-                question = document.findAll(".getquestion").at(0).toPlainText()
-
-                DatabaseMiddleWare.recoverPassword(question,answer,email)
+                answer = document.findAll("#getanswer").at(0).toPlainText()
+                email = document.findAll("#getemail").at(0).toPlainText()
+                question = document.findAll("#getquestion").at(0).toPlainText()
+                passwd=DatabaseMiddleWare.recoverPassword(question,answer,email)
+                document.findAll("#Respond").at(0).setPlainText(passwd)
             except:
-                print("ha?")
+                document.findAll("#Respond").at(0).setPlainText("Enter your email please")

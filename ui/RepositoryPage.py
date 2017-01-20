@@ -25,6 +25,7 @@ class RepositoryPage(QtGui.QWidget):
     WINDOW_PARENT=None
     repositoryName = ""
     repositoryId = ""
+    page_document = None
 
     def __init__(self,parent=None , repositoryId=None):
         super(RepositoryPage, self).__init__(parent)
@@ -54,6 +55,7 @@ class RepositoryPage(QtGui.QWidget):
         self.WINDOW_PARENT.QApplicationRef.processEvents()
         frame = self.view.page().mainFrame()
         document = frame.documentElement()
+        self.page_document = document
         self.fillTheDocument(document=document)
         self.view.show()
 
@@ -105,20 +107,29 @@ class RepositoryPage(QtGui.QWidget):
         #TODO : get the answers of this issue from db
         answersList = DatabaseMiddleWare.getTheAnswerOfIssue(issue_id)
         #TODO : put them in the menu
-
+        answerHtml = self.giveAnswersHtml(answerList=answersList)
+        self.page_document.findAll("#AnswerList").at(0).setInnerXml(answerHtml)
         pass
 
     def giveAnswersHtml(self,answerList):
+        correctColor = "lawngreen"
+        notCorrectColor = "orange"
         outer = ""
         template = """<li class="list-group-item " style="margin-outside: 1px;margin-bottom : 3px">
-                            <span class="glyphicon glyphicon-comment"></span>
+                            <span style="color: {Color}" class="glyphicon glyphicon-comment"></span>
                             <a href="user-{UserId}">{Username}</a>
                             <p class="IssueAnswer">{Answer}</p>
                         </li>"""
 
         for answer in answerList :
             username=""
-            inner = template.format(Answer=answer["description"],UserId="user_id",Username=)
+            inner = template.format(    Answer=answer["description"],
+                                        UserId=answer["user_id"],
+                                        Username=(answer["first_name"] + " "+ answer["last_name"]),
+                                        Color=correctColor if (answer["is_correct"] == 1) else notCorrectColor)
+            outer = outer + inner
+        print(outer)
+        return outer
 
     def fork(self):
         print("Forked")
