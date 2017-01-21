@@ -63,12 +63,19 @@ class RepositoryPage(QtGui.QWidget):
     def fillTheDocument(self , document=None):
         self.MyRepo = DatabaseMiddleWare.fetchRepoDataById(self.repositoryId)[0]
         starCount = DatabaseMiddleWare.getStarCount(self.repositoryId)
+        isForked = self.isForked(repId=self.MyRepo["id"],userId=Utils.UserManager.getCurrentUser()["id"])
+        if isForked == True : document.findAll("#ForkButton").at(0).setPlainText("Forked")
+        else : document.findAll("#ForkButton").at(0).setPlainText("Fork")
         document.findAll("#RepositoryName").at(0).setPlainText(self.MyRepo["repo_name"])
         document.findAll("#StarCount").at(0).setPlainText(str(starCount["stars"]))
         document.findAll("#exampleTextarea").at(0).setPlainText(self.MyRepo["description"])
         allIssues = DatabaseMiddleWare.fetchIssuesForRepo(self.repositoryId)
         issueHtml = self.createIssueList(allIssues)
         document.findAll("#IssueList").at(0).setInnerXml(issueHtml)
+        hasStar = DatabaseMiddleWare.checkStarForRepo(repId=self.MyRepo["id"],
+                                                      userId=Utils.UserManager.getCurrentUser()["id"])
+        if hasStar is None : document.findAll("#StarButton").at(0).setPlainText("Star")
+        else:document.findAll("#StarButton").at(0).setPlainText("Un-Star")
 
     def createIssueList(self , issues):
         is_open_color = "deepskyblue"
@@ -95,9 +102,11 @@ class RepositoryPage(QtGui.QWidget):
     def handleLinkClicked(self, url):
         action=url.toString()
         if(action.__contains__("doFork")):
-            self.fork()
+
+            if self.isForked(repId=self.repositoryId,userId=Utils.UserManager.current_user["id"]) == False :
+                self.fork()
         elif(action.__contains__("doLike")):
-            self.like()
+            self.starUnstar()
         elif action.__contains__("Issue"):
             self.selectIssue(action.split("-")[1])
 
@@ -131,12 +140,40 @@ class RepositoryPage(QtGui.QWidget):
         return outer
 
     def fork(self):
-        print("$$$$"+str(self.MyRepo))
         result = DatabaseMiddleWare.forkRepository(source=self.MyRepo , user_id=Utils.UserManager.getCurrentUser()["id"])
-        print(result)
+        if(result == False) : print("You cannot fork this repository!!!")
+        else : print("Forked successfully")
 
-    def like(self):
-        print("liked")
+    def isForked(self,repId,userId):
+        isForked = DatabaseMiddleWare.checkForked(repId=repId,userId=userId)
+        if isForked is not None : return False
+        else:return True
+
+    def updateForked(self):
+        self.page_document.findAll("#FrokButton").at(0).setPlainText("Forked")
+
+    def starUnstar(self):
+        hasStar = DatabaseMiddleWare.checkStarForRepo(repId=self.MyRepo["id"],
+                                                      userId=Utils.UserManager.getCurrentUser()["id"])
+
+        print(str(hasStar))
+        if hasStar is None :
+            DatabaseMiddleWare.giveStarToRepository(repId=self.MyRepo["id"] ,userId=Utils.UserManager.getCurrentUser()["id"])
+            print("giving star")
+        else :
+            DatabaseMiddleWare.takeStarFromRepository(repId=self.MyRepo["id"] ,userId=Utils.UserManager.getCurrentUser()["id"])
+            print("unStar")
+        self.updateStar()
+
+    def updateStar(self):
+        starCount = DatabaseMiddleWare.getStarCount(self.repositoryId)
+        self.page_document.findAll("#StarCount").at(0).setPlainText(str(starCount["stars"]))
+        hasStar = DatabaseMiddleWare.checkStarForRepo(repId=self.MyRepo["id"],
+                                                      userId=Utils.UserManager.getCurrentUser()["id"])
+        if hasStar is None:
+            self.page_document.findAll("#StarButton").at(0).setPlainText("Star")
+        else:
+            self.page_document.findAll("#StarButton").at(0).setPlainText("Un-Star")
 
     def back(self):
         back=Utils.UIHelper.backPressHandler(BACK_WIDGET,self.WINDOW_PARENT)

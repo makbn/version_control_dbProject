@@ -3,8 +3,8 @@ from datetime import datetime
 import pymysql
 
 hostname = "localhost"
-username = "root"
-password = "1234"
+username = "dbProjectTester"
+password = "12341234"
 databasename = "TESTDB"
 port = 330
 tableName = ['user','follow', 'repository', 'star', 'issue', 'watch', 'answer', 'likeRep' , 'notification']
@@ -96,6 +96,7 @@ class DatabaseMiddleWare(object):
                 "FOREIGN KEY (issue_id) REFERENCES issue(id),"
                 "FOREIGN KEY (answer_id) REFERENCES answer(id),"
                 "FOREIGN KEY (user_id) REFERENCES user(id));",
+
             'follow' :"""CREATE TABLE follow(
                       id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
                       following_id INT NOT NULL,
@@ -115,14 +116,14 @@ class DatabaseMiddleWare(object):
     @staticmethod
     def initialize():
         try:
-            DatabaseMiddleWare.dbRef = pymysql.connect(host=hostname,port=3306, user=username, passwd=password,
+            DatabaseMiddleWare.dbRef = pymysql.connect(host=hostname, user=username, passwd=password,
                                                        db=databasename)
-            # for s in tableName:
-            #     if not DatabaseMiddleWare.checkTableExists(s):
-            #         print("create "+s)
-            #         DatabaseMiddleWare.createTable(s)
-            #     else :
-            #         print("table exists" + s)
+            for s in tableName:
+                if not DatabaseMiddleWare.checkTableExists(s):
+                    print("create "+s)
+                    DatabaseMiddleWare.createTable(s)
+                else :
+                    print("table exists" + s)
         except:
             print("got to an exception")
             DatabaseMiddleWare.onException()
@@ -163,6 +164,7 @@ class DatabaseMiddleWare(object):
             "SELECT count(username) AS count FROM user")
         record = cur.fetchall()
         return record
+
     @staticmethod
     def getUserById(id):
         cur = DatabaseMiddleWare.dbRef.cursor(DatabaseMiddleWare.curType)
@@ -176,6 +178,7 @@ class DatabaseMiddleWare(object):
         query = "SELECT * FROM follow WHERE follower_id={currentUser} AND following_id={targetUser};".format(currentUser=str(currentUser),targetUser=str(targetUser))
         cur.execute(query)
         return cur.fetchone()
+
     @staticmethod
     def follow(currentUser,targetUser):
         cur = DatabaseMiddleWare.dbRef.cursor(DatabaseMiddleWare.curType)
@@ -198,6 +201,7 @@ class DatabaseMiddleWare(object):
         except Exception as e:
             print(str(e))
     @staticmethod
+
     def fetchIssuesForRepo(repo_id):
         cur = DatabaseMiddleWare.dbRef.cursor(DatabaseMiddleWare.curType)
         query = "SELECT * FROM issue is1 WHERE is1.rep_id={RepoID}".format(RepoID=repo_id)
@@ -267,8 +271,16 @@ class DatabaseMiddleWare(object):
             cur.execute(insertQueryfilled)
             DatabaseMiddleWare.dbRef.commit()
         except:
-            print("shit happens all the time")
+            print("e chi shod ?!")
 
+    @staticmethod
+    def checkForked(repId,userId):
+        cur = DatabaseMiddleWare.dbRef.cursor(DatabaseMiddleWare.curType)
+        query = "SELECT * FROM repository WHERE source_id={RepoId} AND owner_id={OwnerId}".format(RepoId=repId,
+                                                                                         OwnerId=userId)
+        print("fork check " + query)
+        cur.execute(query)
+        return cur.fetchone()
 
     @staticmethod
     def getEntityByKey(tableName, **kwargs):
@@ -285,7 +297,6 @@ class DatabaseMiddleWare(object):
         query = "SELECT * FROM " + tableName + " WHERE " + statement
         cur.execute(query)
         return cur.fetchall()
-
 
 
     @staticmethod
@@ -305,6 +316,41 @@ class DatabaseMiddleWare(object):
         cur.execute(query)
         DatabaseMiddleWare.dbRef.commit()
 
+    @staticmethod
+    def takeStarFromRepository(repId,userId):
+        cur = DatabaseMiddleWare.dbRef.cursor(DatabaseMiddleWare.curType)
+        isAvailable = DatabaseMiddleWare.checkStarForRepo(repId=repId, userId=userId)
+        print("is Available " + str(isAvailable))
+        if isAvailable is not None :
+            query = "DELETE FROM star WHERE rep_id = {RepoId} AND user_id = {UserId}".format( RepoId=repId,
+                                                                                            UserId=userId)
+            print("take star " + query)
+            cur.execute(query)
+            DatabaseMiddleWare.dbRef.commit()
+            return True
+        return False
+
+    @staticmethod
+    def checkStarForRepo(repId , userId):
+        cur = DatabaseMiddleWare.dbRef.cursor(DatabaseMiddleWare.curType)
+        checkQuery = "SELECT * FROM star WHERE rep_id={RepoId} AND user_id = {UserId}".format(RepoId=repId,
+                                                                                              UserId=userId)
+        cur.execute(checkQuery)
+        return cur.fetchone()
+
+    @staticmethod
+    def giveStarToRepository(repId , userId):
+        cur = DatabaseMiddleWare.dbRef.cursor(DatabaseMiddleWare.curType)
+        isAvailable = DatabaseMiddleWare.checkStarForRepo(repId=repId,userId=userId)
+        print("is Available " + str(isAvailable))
+        if isAvailable is None :
+            query = "INSERT INTO star(rep_id,user_id) VALUES ({RepoId} , {UserId})".format( RepoId=repId,
+                                                                                            UserId=userId)
+            print("star " + query)
+            cur.execute(query)
+            DatabaseMiddleWare.dbRef.commit()
+            return True
+        return False
     @staticmethod
     def forkRepository(source, user_id):
         cur = DatabaseMiddleWare.dbRef.cursor(DatabaseMiddleWare.curType)
@@ -440,6 +486,7 @@ class DatabaseMiddleWare(object):
                                 "BEGIN"
                                 "DELETE FROM star WHERE star.user_id=u.id;"
                                 "END",
+
             "createForkNotif" : "CREATE TRIGGER forkNotification"
                                 "AFTER INSERT ON repository AS r"
                                 "IF r.is_forked==1"
