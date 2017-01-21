@@ -109,9 +109,13 @@ class RepositoryPage(QtGui.QWidget):
             self.starUnstar()
         elif action.__contains__("Issue"):
             self.selectIssue(action.split("-")[1])
+            self.issue_id = action.split("-")[1]
+        elif action.__contains__("doAnswer"):
+            self.addAnswer()
 
     def selectIssue(self,issue_id):
         print("selected Issue ->" + issue_id)
+        self.issue_id=issue_id
         #TODO : get the answers of this issue from db
         answersList = DatabaseMiddleWare.getTheAnswerOfIssue(issue_id)
         #TODO : put them in the menu
@@ -178,3 +182,66 @@ class RepositoryPage(QtGui.QWidget):
     def back(self):
         back=Utils.UIHelper.backPressHandler(BACK_WIDGET,self.WINDOW_PARENT)
         self.WINDOW_PARENT.setCentralWidget(back)
+
+    def addAnswer(self):
+        ad=AddAnswerForm(self,self.WINDOW_PARENT)
+        ad.show()
+
+
+class AddAnswerForm(QDialog):
+    def __init__(self, main,parent=None):
+        self.WINDOW_PARENT=parent
+        self.main=main
+        super(AddAnswerForm, self).__init__(parent)
+        self.setWindowTitle("Add Answer")
+        self.view=QWebView(self)
+        self.view.linkClicked.connect(self.handleLinkClicked)
+        self.page = self.view.page()
+        self.view.setMinimumSize(400, 400)
+        self.view.setMaximumSize(400, 400)
+        self.view.page().setLinkDelegationPolicy(
+            QtWebKit.QWebPage.DelegateAllLinks)
+        cwd = os.getcwd()
+        self.view.load(QUrl.fromLocalFile(os.path.join(cwd, "resource", "AddAnswer.html")))
+        self.WINDOW_PARENT.QApplicationRef.processEvents()
+        self.view.show()
+        self.setStyleSheet("border-width: 0px; border-style: solid")
+        #self.setWindowFlags(QtCore.Qt.FramelessWindowHint)
+
+    def handleLinkClicked(self, url):
+        action=url.toString()
+        if action.__contains__("answer"):
+            frame = self.view.page().mainFrame()
+            document = frame.documentElement()
+            try:
+                self.title = document.findAll("#title").at(0).toPlainText()
+                self.answer = document.findAll("#answer").at(0).toPlainText()
+                self.addAnswer()
+                self.close()
+
+            except:
+                document.findAll("#Respond").at(0).setPlainText("Enter your email please")
+    def addAnswer(self):
+        # correctColor = "lawngreen"
+        # notCorrectColor = "orange"
+        # outer = ""
+        # template = """<li class="list-group-item " style="margin-outside: 1px;margin-bottom : 3px">
+        #                             <span style="color: {Color}" class="glyphicon glyphicon-comment"></span>
+        #                             <a href="user-{UserId}">{Username}</a>
+        #                             <p class="IssueAnswer">{Answer}</p>
+        #                         </li>"""
+        #
+        # print("$$$" + self.answer)
+        # inner = template.format(Answer=self.answer,
+        #                             UserId=Utils.UserManager.getCurrentUser()['id'],
+        #                             Username=(Utils.UserManager.getCurrentUser()['first_name'] + " " + Utils.UserManager.getCurrentUser()['last_name']),
+        #                             Color=notCorrectColor)
+        # print("****" + inner)
+        # outer=self.main.page_document.findAll("#AnswerList").at(0).toPlainText()
+        # outer = outer + inner
+        # self.main.page_document.findAll("#AnswerList").at(0).setInnerXml(outer)
+        print("###" + self.main.issue_id)
+
+        DatabaseMiddleWare.addAnswer(Utils.UserManager.getCurrentUser()["id"],self.main.issue_id,str(self.title),str(self.answer))
+        print("df")
+        self.main.selectIssue(self.main.issue_id)

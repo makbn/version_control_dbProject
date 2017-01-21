@@ -1,36 +1,22 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="">
-    <meta name="author" content="">
-
+    <meta charset="UTF-8">
+    <title>RepositoryPage</title>
     <link href="css/bootstrap.css" rel="stylesheet">
-
-    <!-- Custom CSS -->
-    <link href="css/semantic.css" rel="stylesheet">
-    <link href="css/scrollbar.css" rel="stylesheet">
-    <link href="css/icon.css" rel="stylesheet">
-
 </head>
-
-<body style="background: #2d2d30;padding: 2px">
-
-
-
-
-<div class="modal-header" style="position: fixed;z-index: 1000;background-color:rgba(45,45,48,255);width: 100%">
-    <h4 class="modal-title" id="myModalLabel" >Repository Page</h4>
+<body style="background-color:rgba(45,45,48,255)">
+<div class="modal-header" style="position: fixed;z-index: 1000;background-color:rgba(45,45,48,255);width: 100%;overflow: hidden">
+    <h4 class="modal-title" id="myModalLabel">Login to My DataBase project</h4>
 </div>
-<div class="container" style="padding-top: 80px">
+<div  style="padding-top: 80px">
+
     <!--Repository top navigator-->
-    <div class="col-xs-12 col-sm-12 col-md-12" style="background-color: white;border-radius: 4px;">
+    <ul style="display: inline-block">
+        <li>
+            <div class="col-xs-12 col-sm-12 col-md-12" style="background-color: white;border-radius: 4px;">
         <div class="form-inline">
-            <div class="form-group col-md-3 col-sm-3 col-xs-3" id="RepositoryName" style="padding: 6px;margin: 8px;color: black">
+            <div class="form-group col-md-3 col-sm-3 col-xs-3" id="RepositoryName" style="color: black;padding: 6px;margin: 8px">
                 Repository Name
             </div>
             <div class="form-inline col-md-2 col-sm-2 col-xs-2 well well-sm"
@@ -46,33 +32,41 @@
                     <span class="glyphicon glyphicon-star" style="color: #0d71bb ; "></span>
                 </div>
             </div>
-            <a id="ForkButton" href="/doFork" class="btn btn-success form-group col-md-2 col-sm-2 col-xs-2 glyphicon glyphicon-duplicate"
+            <a href="/doFork" class="btn btn-success form-group col-md-2 col-sm-2 col-xs-2 glyphicon glyphicon-duplicate"
                     style="float: right;padding: 6px;margin: 8px">
                 Fork
             </a>
-            <a id="StarButton" href="/doLike" class="btn btn-info form-group col-md-2 col-xs-2 col-sm-2 glyphicon glyphicon-star-empty"
+            <a href="/doLike" class="btn btn-info form-group col-md-2 col-xs-2 col-sm-2 glyphicon glyphicon-star-empty"
                     style=" float: right;padding: 6px;margin: 8px">
-                Star
+                Like
             </a>
         </div>
     </div>
-    <div class="col-xs-12 col-sm-12 col-md-12" style="background-color: white;border-radius: 4px;margin-top: 5px">
+        </li>
+        <li>
+            <div class="col-xs-12 col-sm-12 col-md-12" style="background-color: white;border-radius: 4px;margin-top: 5px">
         <div class="form-inline">
-
-            <a href="/doCommit" class="btn btn-default form-group col-md-2 col-sm-2 col-xs-2 glyphicon glyphicon-save"
+            <div class="form-group col-md-3 col-sm-3 col-xs-3" id="RepositoryName" style="color: black;padding: 6px;margin: 8px">
+                Repository Name
+            </div>
+            <a href="/doCommit" class="btn btn-success form-group col-md-2 col-sm-2 col-xs-2 glyphicon glyphicon-duplicate"
                     style="float: right;padding: 6px;margin: 8px">
                 Commit
             </a>
-            <a href="/doAnswer" class="btn btn-warning form-group col-md-2 col-sm-2 col-xs-2 glyphicon glyphicon-comment"
+            <a href="/doAnswer" class="btn btn-success form-group col-md-2 col-sm-2 col-xs-2 glyphicon glyphicon-duplicate"
                     style="float: right;padding: 6px;margin: 8px">
                 Answer
             </a>
-            <a href="/doissue" class="btn btn-primary form-group col-md-2 col-xs-2 col-sm-2 glyphicon glyphicon-question-sign"
+            <a href="/doissue" class="btn btn-info form-group col-md-2 col-xs-2 col-sm-2 glyphicon glyphicon-star-empty"
                     style=" float: right;padding: 6px;margin: 8px">
                 New Issue
             </a>
         </div>
     </div>
+        </li>
+    </ul>
+
+
     <!--end of repo top nav -->
     <!--Repository content container-->
     <div>
@@ -97,23 +91,26 @@
     <div style="padding-top: 1px">
         <div class="columns" style="display: ruby;">
             <!--issue list -->
-            <div class="col-xs-5 col-sm-5 col-md-5 well well-sm" style="margin-inside: 10px ; margin-right:0px ; color: black">
+            <div class="col-xs-5 col-sm-5 col-md-5 well well-sm" style="margin-inside: 10px ; margin-right:0px">
                 Issues :
                 <nav class="menu" style="overflow: scroll ; height: 169px">
                     <ul class="list-group" id="IssueList">
                         <li class="list-group-item " style="margin-outside: 1px">
-                            <span class="glyphicon glyphicon-pushpin" style="color: black"></span>
-                            <a href="Issue/IssueId" style="color: black"> fsadfasdf</a>
+                            <span class="glyphicon glyphicon-pushpin"></span>
+                            Title :
+                            <a href="/Issue-{IssueId}" style="color: {color}">{issueTtile}</a>
+                             <p>{issueDesc}</p>
+
                         </li>
 
                         <li class="list-group-item " style="margin-outside: 1px">
-                            <span class="glyphicon glyphicon-pushpin" style="color: black"></span>
-                            <a href="Issue/IssueId" style="color: black">Repositories:</a>
+                            <span class="glyphicon glyphicon-pushpin"></span>
+                            <a href="Issue/IssueId">Repositories:</a>
                         </li>
 
-                        <li class="list-group-item " style="margin-outside: 1px ; color: black">
-                            <span class="glyphicon glyphicon-pushpin" style="color: black"></span>
-                            <a href="issue/IssueId" style="color: black">Repositories:</a>
+                        <li class="list-group-item " style="margin-outside: 1px">
+                            <span class="glyphicon glyphicon-pushpin"></span>
+                            <a href="issue/IssueId">Repositories:</a>
                         </li>
 
                         <li class="list-group-item " style="margin-outside: 1px">
@@ -125,13 +122,13 @@
                 </nav>
             </div>
             <!--answer list-->
-            <div class="col-xs-6 col-sm-6 col-md-6 well well-sm" style="float: right;margin-inside: 10px;color: black ">
-                Answers :
+            <div class="col-xs-6 col-sm-6 col-md-6 well well-sm" style="float: right;margin-inside: 10px">
+                <div class="col-xs-6">Answers :</div>
                 <nav class="menu well-sm well" style="padding: 1px ;height: 150px ; overflow: scroll">
                     <ul class="list-group" id="AnswerList">
                         <li class="list-group-item " style="margin-outside: 1px;margin-bottom : 3px">
-                            <span class="glyphicon glyphicon-comment"></span>
-                            <a href="user/userId">Username</a>
+                            <span style="color: " class="glyphicon glyphicon-comment"></span>
+                            <a href="user/userId">Username : </a>
                             <p class="IssueAnswer">
                                 Answer of the Selected issue
                                 Lorem ipsum dolor sit amet, ius minim mazim quaestio ex, solet legimus an mei. Cu duo
@@ -139,7 +136,7 @@
                                 mei
                                 . Soluta dolores erroribus sed eu, cu qui tale hinc interpretaris. Ut verear volumus
                                 perpetua mei, dicat mazim eu sed, no menandri torquatos vix. His meliore epicuri no,
-                                eum ad saperet admodum temporibus.
+                                eum ad saperet admodum temporibus .
                             </p>
                         </li>
                         <li class="list-group-item " style="margin-outside: 1px;margin-bottom : 3px">
@@ -170,6 +167,7 @@
                         </li>
                     </ul>
                 </nav>
+
             </div>
 
 
@@ -179,8 +177,5 @@
 </div>
 
 
-
-
 </body>
-
 </html>

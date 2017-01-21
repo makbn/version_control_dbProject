@@ -205,7 +205,7 @@ class DashboardWidget(QtGui.QWidget):
     def goToRepoPage(self,id):
         print(id)
         RepoPage = RepositoryPage.RepositoryPage(self.WINDOW_PARENT, repositoryId=id)
-        SearchPage.BACK_WIDGET = "DashboardWidget"
+        RepositoryPage.BACK_WIDGET = "DashboardWidget"
         self.WINDOW_PARENT.setCentralWidget(RepoPage)
 
     def goToSearch(self):
