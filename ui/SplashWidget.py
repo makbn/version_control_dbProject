@@ -61,8 +61,8 @@ class SplashWidget(QtGui.QWidget):
 
         frame = self.view.page().mainFrame()
         document = frame.documentElement()
-        document.findAll(".carousel-caption").at(1).firstChild().setPlainText(self.getUserNumber())
-        document.findAll(".carousel-caption").at(2).firstChild().setPlainText(self.getRepoNumbers())
+        document.findAll(".carousel-caption").at(1).firstChild().setPlainText(self.getUserNumber()+" Registered User!")
+        document.findAll(".carousel-caption").at(2).firstChild().setPlainText(self.getRepoNumbers()+" Repositories!")
         self.view.show()
 
     def getUserNumber(self):

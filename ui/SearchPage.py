@@ -95,30 +95,30 @@ class SearchPage(QtGui.QWidget):
     def fillTheListTempo(self ,repo,isu,usr):
         self.fillTheLeftMenu()
         outer = ""
-        self.repoHtml = """<div class="searchResult" >
+        self.repoHtml = """<div class="well searchResult" >
                                 Project Name :
                                 <a href="Repository-{RepoId}" class="Project-Name" style="margin: 5px">{ProjectName}</a>
                                 <br>
                                 User :
                                 <a href="/User-{UserId}" class="Username" style="margin: 5px">{Username}</a>
-                                <hr></hr>
+
                             </div>"""
 
-        self.issueHtml = """<div class="searchResult" >
+        self.issueHtml = """<div class="well searchResult" >
                                         Issue Title :
                                         <a href="/Issue-{IssueId}" class="Project-Name" style="margin: 5px">{IssueName}</a>
                                         <br>
                                         Repository :
                                         <a href="/Repository-{repoId}" class="Username" style="margin: 5px">{RepoName}</a>
-                                        <hr></hr>
+
                                     </div>"""
-        self.userHtml = """<div class="searchResult" >
+        self.userHtml = """<div class="well searchResult" >
                                         User :
                                         <a href="/User-{UserId}" class="Project-Name" style="margin: 5px">{Username}</a>
                                         <br>
                                         Info :
                                         <a href="/User-{UserId}" class="Username" style="margin: 5px">{fullName}</a>
-                                        <hr></hr>
+
                                     </div>"""
         outer=""
         for i in repo :

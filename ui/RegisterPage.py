@@ -92,7 +92,16 @@ class RegisterPage(QtGui.QWidget):
         else:
             DatabaseMiddleWare.register(user)
             print("register")
+            retrieve = DatabaseMiddleWare.fetchUser(username)
+            Utils.UserManager.setCurrentUser(user=retrieve)
+            self.goToDashboard()
 
     def back(self):
         back=Utils.UIHelper.backPressHandler(BACK_WIDGET,self.WINDOW_PARENT)
         self.WINDOW_PARENT.setCentralWidget(back)
+
+    def goToDashboard(self):
+        from ui.DashbordWidget import DashboardWidget
+        dsh = DashboardWidget(self.WINDOW_PARENT)
+        dsh.BACK_WIDGET = "SplashWidget"
+        self.WINDOW_PARENT.setCentralWidget(dsh)

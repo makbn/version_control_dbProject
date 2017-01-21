@@ -42,9 +42,9 @@ class ProfileWidget(QtGui.QWidget):
         if Utils.UserManager.getCurrentUser()['id']==self.thisUser['id']:
             print("its your own page")
         elif DatabaseMiddleWare.isFolowing(Utils.UserManager.getCurrentUser()['id'],self.thisUser['id']) is None:
-            self.followbtn = MyWidgets.createBorderLessButton("FOLLOW+", self, 520, 0, self.follow)
+            self.followbtn = MyWidgets.createBorderLessButton("FOLLOW+", self, 20, 0, self.follow)
         else:
-            self.followbtn = MyWidgets.createBorderLessButton("FOLLOW+", self, 520, 0, self.unfollow)
+            self.followbtn = MyWidgets.createBorderLessButton("UN-FOLLOW!", self, 20, 0, self.unfollow)
 
     def createRepositoryElement(self):
         outerHtml = ""
