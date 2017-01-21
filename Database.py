@@ -99,10 +99,10 @@ class DatabaseMiddleWare(object):
             'follow' :"""CREATE TABLE follow(
                       id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
                       following_id INT NOT NULL,
-                      follower_id INT NOT NULL CHECK (follower_id!=following_id)
-                      FOREIGN KEY (following_id) REFERENCES user(id)
+                      follower_id INT NOT NULL CHECK (follower_id!=following_id),
+                      FOREIGN KEY (following_id) REFERENCES user(id),
                       FOREIGN KEY (follower_id) REFERENCES user(id)
-                      )"""
+                      );"""
         }
 
         selectedQuery = switcher.get(tname, None)
@@ -163,7 +163,40 @@ class DatabaseMiddleWare(object):
             "SELECT count(username) AS count FROM user")
         record = cur.fetchall()
         return record
+    @staticmethod
+    def getUserById(id):
+        cur = DatabaseMiddleWare.dbRef.cursor(DatabaseMiddleWare.curType)
+        query="SELECT * FROM user WHERE id={id};".format(id=str(id))
+        cur.execute(query)
+        return cur.fetchone()
 
+    @staticmethod
+    def isFolowing(currentUser,targetUser):
+        cur = DatabaseMiddleWare.dbRef.cursor(DatabaseMiddleWare.curType)
+        query = "SELECT * FROM follow WHERE follower_id={currentUser} AND following_id={targetUser};".format(currentUser=str(currentUser),targetUser=str(targetUser))
+        cur.execute(query)
+        return cur.fetchone()
+    @staticmethod
+    def follow(currentUser,targetUser):
+        cur = DatabaseMiddleWare.dbRef.cursor(DatabaseMiddleWare.curType)
+        query = "INSERT INTO follow(follower_id,following_id) VALUES ({currentUser},{targetUser});".format(
+            currentUser=str(currentUser), targetUser=str(targetUser))
+        try:
+            cur.execute(query)
+            DatabaseMiddleWare.dbRef.commit()
+        except Exception as e:
+            print(str(e))
+
+    @staticmethod
+    def unfollow(currentUser, targetUser):
+        cur = DatabaseMiddleWare.dbRef.cursor(DatabaseMiddleWare.curType)
+        query = "DELETE FROM follow WHERE follower_id={currentUser} AND following_id={targetUser};".format(
+            currentUser=str(currentUser), targetUser=str(targetUser))
+        try:
+            cur.execute(query)
+            DatabaseMiddleWare.dbRef.commit()
+        except Exception as e:
+            print(str(e))
     @staticmethod
     def fetchIssuesForRepo(repo_id):
         cur = DatabaseMiddleWare.dbRef.cursor(DatabaseMiddleWare.curType)

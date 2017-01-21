@@ -82,7 +82,7 @@ class DashboardWidget(QtGui.QWidget):
         doc = self.view1.page().mainFrame().documentElement()
         doc.findAll("#namePlaceHolder").at(0).setPlainText(str(self.currentUser["first_name"]) + " " + str(self.currentUser["last_name"]))
         doc.findAll("#usernamePlaceHolder").at(0).setPlainText(str(self.currentUser["username"]))
-        print(self.view.page().mainFrame().toHtml())
+
         self.view1.show()
 
     # ----- Notification ----
@@ -146,17 +146,17 @@ class DashboardWidget(QtGui.QWidget):
             <a class="header" href="{url}">{name}</a>
             <div class="description">{description}</div>
             <div class="row" style="display: flex; margin-top: 10px">
-                <div class = "col-xs-3" style="padding-left: 15px">
+                <div class = "col-xs-3" style="padding-left: 5px">
                     <a class="ui label {color}">{visibility}</a>
                 </div>
-                <div class = "col-xs-3" style="padding-left: 15px">
+                <div class = "col-xs-3" style="padding-left: 5px">
                     <div class="ui label">
                         <i class="star icon"></i> {StarCounter}
                     </div>
                 </div>
 
-                <div class = "col-xs-3" style="padding-left: 15px">
-                    <a class="ui blue label">{username}/{name2}</a>
+                <div class = "col-xs-3" style="padding-left: 5px">
+                    <a class="ui blue label">{name2}</a>
                 </div>
             </div>
         </div>
@@ -174,8 +174,7 @@ class DashboardWidget(QtGui.QWidget):
                                         description=i["description"][:10] + "...",
                                         visibility="private" if (int(i["is_private"]) == 1) else "public",
                                         color=private_label if (int(i["is_private"]) == 1) else public_label,
-                                        username=Utils.UserManager.getCurrentUser()['username'],
-                                        name2=i["repo_name"]
+                                        name2=str(str(Utils.UserManager.getCurrentUser()['username'])+"/"+str(i["repo_name"]))[:14]+"..."
             )
             outerHtml = outerHtml + temp
         return outerHtml

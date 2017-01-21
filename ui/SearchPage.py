@@ -7,6 +7,7 @@ import MyWidgets
 from PySide.QtCore import *
 from PySide import *
 from Database import DatabaseMiddleWare
+from ui import ProfileWidget
 from ui import RepositoryPage
 
 PARTITION = 50
@@ -73,11 +74,17 @@ class SearchPage(QtGui.QWidget):
                 outer = outer + inner
             self.document.findAll("#SearchResultList").at(0).setInnerXml(outer)
         elif action.__contains__("User-"):
-            action=action[8:]
+            action=action[13:]
+            user=DatabaseMiddleWare.getUserById(action)
+            if user is not None:
+                self.gotToProfile(user)
             print(action)
 
 
-
+    def gotToProfile(self,user):
+        widget = ProfileWidget.ProfileWidget(self.WINDOW_PARENT,user)
+        ProfileWidget.BACK_WIDGET = "SearchPage"
+        self.WINDOW_PARENT.setCentralWidget(widget)
 
     def fillTheLeftMenu(self):
 
@@ -146,11 +153,11 @@ class SearchPage(QtGui.QWidget):
         dvider = MyWidgets.createLableColered(self,0,PARTITION*11 +10,self.WINDOW_WIDTH,100,"rgba(29,185,84,255)")
         footer = MyWidgets.createTextLable(self.WINDOW_FOOTER_MESSAGE, self,PARTITION*1, PARTITION*11 +15, "white", "5")
         close=MyWidgets.createBorderLessButton("EXIT",self,710,0,self.WINDOW_PARENT.quit)
-        back=MyWidgets.createBorderLessButton("Back",self,630,0,self.back)
+        back=MyWidgets.createBorderLessButton("BACK",self,630,0,self.back)
 
     def gotoRepoPage(self,id):
         RepoPage = RepositoryPage.RepositoryPage(self.WINDOW_PARENT,repositoryId=id)
-        SearchPage.BACK_WIDGET = "DashboardWidget"
+        RepositoryPage.BACK_WIDGET = "DashboardWidget"
         self.WINDOW_PARENT.setCentralWidget(RepoPage)
 
     def back(self):
