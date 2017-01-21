@@ -174,9 +174,9 @@ class DatabaseMiddleWare(object):
         return temp
 
     @staticmethod
-    def getTheAnswerOfIssue(my_issue_id):
+    def getTheAnswerOfIssue(my_issue_id , ):
         cur = DatabaseMiddleWare.dbRef.cursor(DatabaseMiddleWare.curType)
-        query = "SELECT * FROM answer ans WHERE ans.issue_id = {IssueId}".format(IssueId=my_issue_id)
+        query = "SELECT * FROM answer ans,user us1 WHERE us1.id = ans.user_id AND ans.issue_id = {IssueId}".format(IssueId=my_issue_id)
         print(query)
         cur.execute(query)
         temp = cur.fetchall()
@@ -204,12 +204,13 @@ class DatabaseMiddleWare(object):
 
     @staticmethod
     def recoverPassword(qNumber,answer,email):
-        query="SELECT * FROM user WHERE user.email="+email
+        query="SELECT * FROM user WHERE user.email='{Email}'".format(Email=email)
         dbcur = DatabaseMiddleWare.dbRef.cursor(DatabaseMiddleWare.curType)
         dbcur.execute(query)
-        if dbcur.fetchone()[0]['question_number']==qNumber:
-            if dbcur.fetchone()[0]['answer']==answer:
-                return dbcur.fetchone()[0]['password'];
+        result = dbcur.fetchone()
+        if str(result['question_number'])==str(qNumber):
+            if result['answer']==str(answer):
+                return  ("Password is" + result['password'])
             else:
                 return "wrong answer dude!"
         else:
@@ -219,15 +220,17 @@ class DatabaseMiddleWare(object):
     def register(user):
         cur = DatabaseMiddleWare.dbRef.cursor(DatabaseMiddleWare.curType)
         insertQuery = "INSERT INTO user(username,password,email,first_name,last_name,gender,question_number,answer)" \
-                      "VALUES ('{username}','{password}','{email}','{first_name}','{last_name}','{gender}',1,'gogogol')"
+                      "VALUES ('{username}','{password}','{email}','{first_name}','{last_name}',1,{QuestionNumber},'{Answer}')"
 
         insertQueryfilled = insertQuery.format( username=user["username"],
                                                 email=user["email"],
                                                 password=user["password"],
                                                 first_name=user["firstname"],
-                                                gender=user["gender"],
+                                                QuestionNumber=user["question"],
+                                                Answer=user["answer"],
                                                 last_name=user["lastname"])
         try:
+            print(str(insertQueryfilled))
             cur.execute(insertQueryfilled)
             DatabaseMiddleWare.dbRef.commit()
         except:
@@ -270,13 +273,28 @@ class DatabaseMiddleWare(object):
         DatabaseMiddleWare.dbRef.commit()
 
     @staticmethod
-    def forkRepository(source_id, user_id, is_private):
+    def forkRepository(source, user_id):
         cur = DatabaseMiddleWare.dbRef.cursor(DatabaseMiddleWare.curType)
-        date = datetime.datetime.now()
 
-        query = "INSERT INTO TABLE repository (repo_name,description,is_forked,source_id,is_private,owner_id,create_date) " \
-                "SELECT repo_name,description,1,source_id" + is_private + "," + user_id + "," + date + " FROM TABLE WHERE id=" + source_id + " UPDATE source_id CASE source_id=-1 THEN " + source_id
+        query = "SELECT owner_id FROM repository WHERE owner_id={OwnerId} AND id={RepoId}".format(OwnerId=user_id,
+                                                                                                  RepoId=source["id"])
         cur.execute(query)
+        date = datetime.now()
+        repo = cur.fetchone()
+        print(repo)
+        if(repo == None) :
+            query="INSERT INTO repository (repo_name,description,is_private,is_forked,source_id,owner_id,create_date) " \
+                  "VALUES ('{RepoName}' , '{Description}' , {IsPrivate} , 1 , {SourceId} , {OwnerId} , '{CreateDate}')".format(RepoName=source["repo_name"],
+                                                                                                                         Description=source["description"],
+                                                                                                                         IsPrivate=source["is_private"],
+                                                                                                                         SourceId=source["id"],
+                                                                                                                         OwnerId=user_id,
+                                                                                                                         CreateDate=str(date)[:10])
+            print(query)
+            cur.execute(query)
+            DatabaseMiddleWare.dbRef.commit()
+            return True
+        else : return False
 
     @staticmethod
     def getIssueNumber():
@@ -292,7 +310,7 @@ class DatabaseMiddleWare(object):
         cur = DatabaseMiddleWare.dbRef.cursor(DatabaseMiddleWare.curType)
         queryTemp = "SELECT r1.id repo_id ,us1.id user_id, repo_name , is_private , description , first_name , last_name " \
                 "FROM repository r1,user us1 " \
-                "WHERE us1.id = r1.owner_id  AND repo_name = '{repoName}' GROUP BY r1.id;"
+                "WHERE us1.id = r1.owner_id  AND repo_name = '{repoName}' AND is_private=0;"
         query = queryTemp.format(repoName = name)
         print(query)
         cur.execute(query)

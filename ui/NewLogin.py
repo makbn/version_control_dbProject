@@ -32,7 +32,6 @@ class NewLoginWidget(QtGui.QWidget):
         self.layout = QtGui.QHBoxLayout()
         self.addWidgets()
 
-
     def loadSplash(self):
         self.view = QWebView(self)
         self.view.linkClicked.connect(self.handleLinkClicked)
@@ -72,7 +71,6 @@ class NewLoginWidget(QtGui.QWidget):
         dsh.BACK_WIDGET = "SplashWidget"
         self.WINDOW_PARENT.setCentralWidget(dsh)
 
-
     def login(self):
         frame = self.view.page().mainFrame()
         document = frame.documentElement()
@@ -104,8 +102,6 @@ class NewLoginWidget(QtGui.QWidget):
         rpf=RecoverPasswordForm(self.WINDOW_PARENT)
         rpf.show()
 
-
-
     def signup(self):
         from ui import RegisterPage
         signup = RegisterPage.RegisterPage(self.WINDOW_PARENT)
@@ -115,7 +111,6 @@ class NewLoginWidget(QtGui.QWidget):
     def back(self):
         back=Utils.UIHelper.backPressHandler(BACK_WIDGET,self.WINDOW_PARENT)
         self.WINDOW_PARENT.setCentralWidget(back)
-
 
 class RecoverPasswordForm(QDialog):
     def __init__(self, parent=None):
@@ -135,16 +130,17 @@ class RecoverPasswordForm(QDialog):
         self.view.show()
         self.setStyleSheet("border-width: 0px; border-style: solid")
         #self.setWindowFlags(QtCore.Qt.FramelessWindowHint)
+
     def handleLinkClicked(self, url):
         action=url.toString()
         if action.__contains__("recover"):
             frame = self.view.page().mainFrame()
             document = frame.documentElement()
             try:
-                answer = document.findAll(".getanswer").at(0).toPlainText()
-                email = document.findAll(".getemail").at(0).toPlainText()
-                question = document.findAll(".getquestion").at(0).toPlainText()
-
-                DatabaseMiddleWare.recoverPassword(question,answer,email)
+                answer = document.findAll("#getanswer").at(0).toPlainText()
+                email = document.findAll("#getemail").at(0).toPlainText()
+                question = document.findAll("#getquestion").at(0).toPlainText()
+                passwd=DatabaseMiddleWare.recoverPassword(question,answer,email)
+                document.findAll("#Respond").at(0).setPlainText(passwd)
             except:
-                print("ha?")
+                document.findAll("#Respond").at(0).setPlainText("Enter your email please")

@@ -73,8 +73,8 @@ class RegisterPage(QtGui.QWidget):
         username = document.findAll("#getUsername").at(0).toPlainText()
         firstname = document.findAll("#getFirstname").at(0).toPlainText()
         lastname = document.findAll("#getLastname").at(0).toPlainText()
-        date = document.findAll("#getDate").at(0).toPlainText()
-        Gender = document.findAll("#getGender").at(0).toPlainText()
+        answer = document.findAll("#getanswer").at(0).toPlainText()
+        question = document.findAll("#getquestion").at(0).toPlainText()
 
         user = {
             "email": email,
@@ -82,9 +82,10 @@ class RegisterPage(QtGui.QWidget):
             "username": username,
             "firstname": firstname,
             "lastname": lastname,
-            "birthdate": date,
-            "gender": 1 if Gender == "Male" else 0
+            "answer" : answer,
+            "question" : question
         }
+        print(str(user))
         found = DatabaseMiddleWare.fetchUser(username)
         if(found != None) :
             print("username Already exists")
