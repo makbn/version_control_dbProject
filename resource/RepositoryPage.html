@@ -6,12 +6,15 @@
     <link href="css/bootstrap.css" rel="stylesheet">
 </head>
 <body style="background-color:rgba(45,45,48,255)">
-<div class="modal-header" style="position: fixed;z-index: 1000;background-color:rgba(45,45,48,255);width: 100%">
+<div class="modal-header" style="position: fixed;z-index: 1000;background-color:rgba(45,45,48,255);width: 100%;overflow: hidden">
     <h4 class="modal-title" id="myModalLabel">Login to My DataBase project</h4>
 </div>
-<div class="container" style="padding-top: 80px">
+<div  style="padding-top: 80px">
+
     <!--Repository top navigator-->
-    <div class="col-xs-12 col-sm-12 col-md-12" style="background-color: white;border-radius: 4px;">
+    <ul style="display: inline-block">
+        <li>
+            <div class="col-xs-12 col-sm-12 col-md-12" style="background-color: white;border-radius: 4px;">
         <div class="form-inline">
             <div class="form-group col-md-3 col-sm-3 col-xs-3" id="RepositoryName" style="color: black;padding: 6px;margin: 8px">
                 Repository Name
@@ -39,6 +42,31 @@
             </a>
         </div>
     </div>
+        </li>
+        <li>
+            <div class="col-xs-12 col-sm-12 col-md-12" style="background-color: white;border-radius: 4px;margin-top: 5px">
+        <div class="form-inline">
+            <div class="form-group col-md-3 col-sm-3 col-xs-3" id="RepositoryName" style="color: black;padding: 6px;margin: 8px">
+                Repository Name
+            </div>
+            <a href="/doCommit" class="btn btn-success form-group col-md-2 col-sm-2 col-xs-2 glyphicon glyphicon-duplicate"
+                    style="float: right;padding: 6px;margin: 8px">
+                Commit
+            </a>
+            <a href="/doAnswer" class="btn btn-success form-group col-md-2 col-sm-2 col-xs-2 glyphicon glyphicon-duplicate"
+                    style="float: right;padding: 6px;margin: 8px">
+                Answer
+            </a>
+            <a href="/doissue" class="btn btn-info form-group col-md-2 col-xs-2 col-sm-2 glyphicon glyphicon-star-empty"
+                    style=" float: right;padding: 6px;margin: 8px">
+                New Issue
+            </a>
+        </div>
+    </div>
+        </li>
+    </ul>
+
+
     <!--end of repo top nav -->
     <!--Repository content container-->
     <div>
@@ -95,7 +123,7 @@
             </div>
             <!--answer list-->
             <div class="col-xs-6 col-sm-6 col-md-6 well well-sm" style="float: right;margin-inside: 10px">
-                Answers :
+                <div class="col-xs-6">Answers :</div>
                 <nav class="menu well-sm well" style="padding: 1px ;height: 150px ; overflow: scroll">
                     <ul class="list-group" id="AnswerList">
                         <li class="list-group-item " style="margin-outside: 1px;margin-bottom : 3px">
@@ -139,6 +167,7 @@
                         </li>
                     </ul>
                 </nav>
+
             </div>
 
 
