@@ -112,6 +112,9 @@ class RepositoryPage(QtGui.QWidget):
             self.issue_id = action.split("-")[1]
         elif action.__contains__("doAnswer"):
             self.addAnswer()
+        elif action.__contains__("doissue"):
+            self.addIssue()
+
 
     def selectIssue(self,issue_id):
         print("selected Issue ->" + issue_id)
@@ -186,6 +189,9 @@ class RepositoryPage(QtGui.QWidget):
     def addAnswer(self):
         ad=AddAnswerForm(self,self.WINDOW_PARENT)
         ad.show()
+    def addIssue(self):
+        ai=AddIssueForm(self,self.WINDOW_PARENT)
+        ai.show()
 
 
 class AddAnswerForm(QDialog):
@@ -245,3 +251,43 @@ class AddAnswerForm(QDialog):
         DatabaseMiddleWare.addAnswer(Utils.UserManager.getCurrentUser()["id"],self.main.issue_id,str(self.title),str(self.answer))
         print("df")
         self.main.selectIssue(self.main.issue_id)
+
+class AddIssueForm(QDialog):
+    def __init__(self, main,parent=None):
+        self.WINDOW_PARENT=parent
+        self.main=main
+        super(AddIssueForm, self).__init__(parent)
+        self.setWindowTitle("Add Issue")
+        self.view=QWebView(self)
+        self.view.linkClicked.connect(self.handleLinkClicked)
+        self.page = self.view.page()
+        self.view.setMinimumSize(400, 400)
+        self.view.setMaximumSize(400, 400)
+        self.view.page().setLinkDelegationPolicy(
+            QtWebKit.QWebPage.DelegateAllLinks)
+        cwd = os.getcwd()
+        self.view.load(QUrl.fromLocalFile(os.path.join(cwd, "resource", "AddIssue.html")))
+        self.WINDOW_PARENT.QApplicationRef.processEvents()
+        self.view.show()
+        self.setStyleSheet("border-width: 0px; border-style: solid")
+
+    def handleLinkClicked(self, url):
+        action=url.toString()
+        if action.__contains__("issue"):
+            frame = self.view.page().mainFrame()
+            document = frame.documentElement()
+            try:
+                self.title = document.findAll("#title").at(0).toPlainText()
+                self.desc = document.findAll("#desc").at(0).toPlainText()
+                self.addIssue()
+                self.close()
+            except Exception as e:
+                print("exception "+str(e))
+    def addIssue(self):
+        DatabaseMiddleWare.addIssue(self.title,self.desc,self.main.repositoryId,Utils.UserManager.getCurrentUser()['id'])
+        print("issue added")
+        allIssues = DatabaseMiddleWare.fetchIssuesForRepo(self.main.repositoryId)
+        issueHtml = self.main.createIssueList(allIssues)
+        self.main.page_document.findAll("#IssueList").at(0).setInnerXml(issueHtml)
+
+
