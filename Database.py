@@ -66,16 +66,7 @@ class DatabaseMiddleWare(object):
                      "FOREIGN KEY  (user_id) REFERENCES user(id),"
                      "FOREIGN KEY  (rep_id) REFERENCES repository(id));",
 
-            'notification':"CREATE TABLE notification ( "
-                "id INT PRIMARY KEY AUTO_INCREMENT, "
-                "user_id INT NOT NULL ,"
-                "title VARCHAR(45) NOT NULL, "
-                "description VARCHAR (200) NOT NULL,"
-                "link_id INT NOT NULL ,"
-                "link_type INT(1) NOT NULL ,"
-                "is_read INT (1) DEFAULT 0 , "
-                "created_date DATE NOT NULL,"
-                "FOREIGN KEY (user_id) REFERENCES user(id));",
+            'notification':"create trigger forkNotif after insert on repository for each row begin if new.is_forked = 1 then insert into notification(user_id , title,description,link_id,link_type,is_read,created_date) values ((select user_id from repository where id=new.source_id),'Fork','somebody forked you',new.source_id,1,0,'2017-01-10'); end if;end;",
 
             'answer':"CREATE TABLE answer ("
                 "id INT PRIMARY  KEY AUTO_INCREMENT, "
@@ -317,7 +308,6 @@ class DatabaseMiddleWare(object):
         cur = DatabaseMiddleWare.dbRef.cursor(DatabaseMiddleWare.curType)
         query = "SELECT * FROM repository WHERE source_id={RepoId} AND owner_id={OwnerId}".format(RepoId=repId,
                                                                                          OwnerId=userId)
-        print("fork check " + query)
         cur.execute(query)
         return cur.fetchone()
 
@@ -359,11 +349,9 @@ class DatabaseMiddleWare(object):
     def takeStarFromRepository(repId,userId):
         cur = DatabaseMiddleWare.dbRef.cursor(DatabaseMiddleWare.curType)
         isAvailable = DatabaseMiddleWare.checkStarForRepo(repId=repId, userId=userId)
-        print("is Available " + str(isAvailable))
         if isAvailable is not None :
             query = "DELETE FROM star WHERE rep_id = {RepoId} AND user_id = {UserId}".format( RepoId=repId,
                                                                                             UserId=userId)
-            print("take star " + query)
             cur.execute(query)
             DatabaseMiddleWare.dbRef.commit()
             return True
@@ -391,11 +379,9 @@ class DatabaseMiddleWare(object):
     def giveStarToRepository(repId , userId):
         cur = DatabaseMiddleWare.dbRef.cursor(DatabaseMiddleWare.curType)
         isAvailable = DatabaseMiddleWare.checkStarForRepo(repId=repId,userId=userId)
-        print("is Available " + str(isAvailable))
         if isAvailable is None :
             query = "INSERT INTO star(rep_id,user_id) VALUES ({RepoId} , {UserId})".format( RepoId=repId,
                                                                                             UserId=userId)
-            print("star " + query)
             cur.execute(query)
             DatabaseMiddleWare.dbRef.commit()
             return True
@@ -536,7 +522,7 @@ class DatabaseMiddleWare(object):
                                 "DELETE FROM star WHERE star.user_id=u.id;"
                                 "END",
 
-            "createForkNotif" : "CREATE TRIGGER forkNotification"
+            "createForkNotif" : "CREATE TRIGGER forkNotification "
                                 "AFTER INSERT ON repository AS r"
                                 "IF r.is_forked==1"
                                 "BEGIN"
@@ -546,6 +532,7 @@ class DatabaseMiddleWare(object):
                                 "r.repo_name,CONCAT('forked by',(SELECT username FROM user WHERE user.id=r.user_id))"
                                 ",r.id,'FORK',0);"
                                 "END ",
+
             "createStarNotif" : "CREATE TRIGGER starNotification"
                                 "AFTER INSERT ON star As s"
                                 "FOR EACH ROW"
