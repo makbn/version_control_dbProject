@@ -42,52 +42,103 @@ class SearchPage(QtGui.QWidget):
         self.WINDOW_PARENT.QApplicationRef.processEvents()
         frame = self.view.page().mainFrame()
         self.document = frame.documentElement()
-        self.fillTheLeftMenu(document=self.document)
         self.WINDOW_PARENT.QApplicationRef.processEvents()
         self.view.show()
 
     def handleLinkClicked(self, url):
+        outer=""
         action=url.toString()
-        print(self.document)
+        print(action)
         if action.__contains__("DoSearch") :
             query = self.document.findAll("#getSearchQuery").at(0).toPlainText()
             self.search(query=query )
         elif action.__contains__("Repository") :
             self.gotoRepoPage(str(action).split("-")[1])
             print("goto repo page " + str(action).split("-")[1])
+        elif action.__contains__("filterUser"):
+            for i in self.usr:
+                inner = self.userHtml.format(UserId=i['id'], Username=i['username'],fullName=i['first_name'] + " " + i['last_name'])
+                outer = outer + inner
+            self.document.findAll("#SearchResultList").at(0).setInnerXml(outer)
+        elif action.__contains__("filterRepo"):
+            print("filter Repository")
+            for i in self.rep:
+                inner = ""
+                inner = self.repoHtml.format(ProjectName=i['repo_name'],UserId=str(i['uid']),RepoId=str(i['rid']),Username=i['username'])
+                outer = outer + inner
+            self.document.findAll("#SearchResultList").at(0).setInnerXml(outer)
+        elif action.__contains__("filterIssue"):
+            for i in self.isu:
+                inner = self.issueHtml.format(IssueId=i['iid'], IssueName=i['title'], repoId=i['rid'],RepoName=i['repo_name'])
+                outer = outer + inner
+            self.document.findAll("#SearchResultList").at(0).setInnerXml(outer)
+        elif action.__contains__("User-"):
+            action=action[8:]
+            print(action)
 
-    def fillTheLeftMenu(self,document):
-        repCount = DatabaseMiddleWare.getRepoNumber()
-        userCount = DatabaseMiddleWare.getUsersNumber()
-        issueCount = DatabaseMiddleWare.getIssueNumber()
-        document.findAll("#RepoCounter").at(0).setPlainText(str(repCount[0]['count']))
-        document.findAll("#UserCounter").at(0).setPlainText(str(userCount[0]['count']))
-        document.findAll("#IssueCounter").at(0).setPlainText(str(issueCount[0]['count']))
 
-    def fillTheListTempo(self ,fetchedResult, document=None):
+
+
+    def fillTheLeftMenu(self):
+
+        self.document.findAll("#RepoCounter").at(0).setPlainText(str(len(self.rep)))
+        self.document.findAll("#UserCounter").at(0).setPlainText(str(len(self.usr)))
+        self.document.findAll("#IssueCounter").at(0).setPlainText(str(len(self.isu)))
+
+    def fillTheListTempo(self ,repo,isu,usr):
+        self.fillTheLeftMenu()
         outer = ""
-        searchResultTemplate = """<div class="searchResult" >
+        self.repoHtml = """<div class="searchResult" >
                                 Project Name :
                                 <a href="Repository-{RepoId}" class="Project-Name" style="margin: 5px">{ProjectName}</a>
                                 <br>
                                 User :
-                                <a href="UserProfile-{UserId}" class="Username" style="margin: 5px">{Username}</a>
+                                <a href="/User-{UserId}" class="Username" style="margin: 5px">{Username}</a>
                                 <hr></hr>
                             </div>"""
-        for i in fetchedResult :
+
+        self.issueHtml = """<div class="searchResult" >
+                                        Issue Title :
+                                        <a href="/Issue-{IssueId}" class="Project-Name" style="margin: 5px">{IssueName}</a>
+                                        <br>
+                                        Repository :
+                                        <a href="/Repository-{repoId}" class="Username" style="margin: 5px">{RepoName}</a>
+                                        <hr></hr>
+                                    </div>"""
+        self.userHtml = """<div class="searchResult" >
+                                        User :
+                                        <a href="/User-{UserId}" class="Project-Name" style="margin: 5px">{Username}</a>
+                                        <br>
+                                        Info :
+                                        <a href="/User-{UserId}" class="Username" style="margin: 5px">{fullName}</a>
+                                        <hr></hr>
+                                    </div>"""
+        outer=""
+        for i in repo :
             inner = ""
-            inner = searchResultTemplate.format(ProjectName = i['repo_name'],
-                                                UserId = str(i['user_id']) ,
-                                                RepoId = str(i['repo_id']) ,
-                                                Username = i['first_name']+ " " + i['last_name'])
+            inner = self.repoHtml.format(ProjectName = i['repo_name'],
+                                                UserId = str(i['uid']) ,
+                                                RepoId = str(i['rid']) ,
+                                                Username = i['username'])
 
             outer = outer + inner
-        document.findAll("#SearchResultList").at(0).setInnerXml(outer)
+
+        for i in isu:
+            inner = self.issueHtml.format(IssueId=i['iid'],IssueName=i['title'],repoId=i['rid'],RepoName=i['repo_name'])
+            outer = outer + inner
+
+        for i in usr:
+            inner=self.userHtml.format(UserId=i['id'],Username=i['username'],fullName=i['first_name']+" "+i['last_name'])
+            outer = outer + inner
+
+        self.document.findAll("#SearchResultList").at(0).setInnerXml(outer)
 
     def search(self,query) :
-        searchResult = DatabaseMiddleWare.getAllRepoByName(query)
-        self.fillTheListTempo(fetchedResult=searchResult,document=self.document)
-        pass
+        self.rep = DatabaseMiddleWare.findRepositoryByName(query)
+        self.isu=DatabaseMiddleWare.findIssueByName(query)
+        self.usr=DatabaseMiddleWare.findUserByName(query)
+        self.fillTheListTempo(repo=self.rep,isu=self.isu,usr=self.usr)
+
 
     def addWidgets(self):
         self.background=MyWidgets.createBackground(self)

@@ -8,7 +8,7 @@ class Styles:
     COLOR_Transparent="rgba(0,0,0,0)"
 
     # Styles
-    STYLE_QLable="QLabel { color: rgb(50, 50, 50); font-size: 11px; background-color: rgba(0, 204, 255, 255); border: 1px solid rgba(188, 188, 188, 250);}"
+    STYLE_QLable="QLabel { color: rgb(50, 50, 50); font-size: 11px; background-color: rgba(0, 204, 255, 255);}"
     STYLE_QPushButton="QPushButton { background: #ffffff ;border-radius: 4px;font-family: Arial;color: #999999;font-size: 20px;padding: 10px 20px 10px 20px;text-decoration: none;} QPushButton:hover {background: rgba(250,250,250,255); color:rgba(29,185,84,255);text-decoration: none;}"
     STYLE_QEditText="QTextEdit, QListView {background-color: white; border-radius: 4px;border: 1px solid #e5e5e5; background-image: url(draft.png); background-attachment: fixed;}"
 
