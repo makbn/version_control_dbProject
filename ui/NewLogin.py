@@ -32,7 +32,6 @@ class NewLoginWidget(QtGui.QWidget):
         self.layout = QtGui.QHBoxLayout()
         self.addWidgets()
 
-
     def loadSplash(self):
         self.view = QWebView(self)
         self.view.linkClicked.connect(self.handleLinkClicked)
@@ -72,7 +71,6 @@ class NewLoginWidget(QtGui.QWidget):
         dsh.BACK_WIDGET = "SplashWidget"
         self.WINDOW_PARENT.setCentralWidget(dsh)
 
-
     def login(self):
         frame = self.view.page().mainFrame()
         document = frame.documentElement()
@@ -104,8 +102,6 @@ class NewLoginWidget(QtGui.QWidget):
         rpf=RecoverPasswordForm(self.WINDOW_PARENT)
         rpf.show()
 
-
-
     def signup(self):
         from ui import RegisterPage
         signup = RegisterPage.RegisterPage(self.WINDOW_PARENT)
@@ -115,7 +111,6 @@ class NewLoginWidget(QtGui.QWidget):
     def back(self):
         back=Utils.UIHelper.backPressHandler(BACK_WIDGET,self.WINDOW_PARENT)
         self.WINDOW_PARENT.setCentralWidget(back)
-
 
 class RecoverPasswordForm(QDialog):
     def __init__(self, parent=None):

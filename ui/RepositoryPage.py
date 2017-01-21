@@ -26,6 +26,7 @@ class RepositoryPage(QtGui.QWidget):
     repositoryName = ""
     repositoryId = ""
     page_document = None
+    MyRepo=None
 
     def __init__(self,parent=None , repositoryId=None):
         super(RepositoryPage, self).__init__(parent)
@@ -60,11 +61,11 @@ class RepositoryPage(QtGui.QWidget):
         self.view.show()
 
     def fillTheDocument(self , document=None):
-        MyRepo = DatabaseMiddleWare.fetchRepoDataById(self.repositoryId)
+        self.MyRepo = DatabaseMiddleWare.fetchRepoDataById(self.repositoryId)[0]
         starCount = DatabaseMiddleWare.getStarCount(self.repositoryId)
-        document.findAll("#RepositoryName").at(0).setPlainText(MyRepo[0]["repo_name"])
+        document.findAll("#RepositoryName").at(0).setPlainText(self.MyRepo["repo_name"])
         document.findAll("#StarCount").at(0).setPlainText(str(starCount["stars"]))
-        document.findAll("#exampleTextarea").at(0).setPlainText(MyRepo[0]["description"])
+        document.findAll("#exampleTextarea").at(0).setPlainText(self.MyRepo["description"])
         allIssues = DatabaseMiddleWare.fetchIssuesForRepo(self.repositoryId)
         issueHtml = self.createIssueList(allIssues)
         document.findAll("#IssueList").at(0).setInnerXml(issueHtml)
@@ -91,7 +92,6 @@ class RepositoryPage(QtGui.QWidget):
     def Repository(self , repositoryName):
         pass
 
-
     def handleLinkClicked(self, url):
         action=url.toString()
         if(action.__contains__("doFork")):
@@ -100,7 +100,6 @@ class RepositoryPage(QtGui.QWidget):
             self.like()
         elif action.__contains__("Issue"):
             self.selectIssue(action.split("-")[1])
-
 
     def selectIssue(self,issue_id):
         print("selected Issue ->" + issue_id)
@@ -132,7 +131,9 @@ class RepositoryPage(QtGui.QWidget):
         return outer
 
     def fork(self):
-        print("Forked")
+        print("$$$$"+str(self.MyRepo))
+        result = DatabaseMiddleWare.forkRepository(source=self.MyRepo , user_id=Utils.UserManager.getCurrentUser()["id"])
+        print(result)
 
     def like(self):
         print("liked")
