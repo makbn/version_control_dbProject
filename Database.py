@@ -7,7 +7,7 @@ username = "root"
 password = "1234"
 databasename = "TESTDB"
 port = 330
-tableName = ['user', 'repository', 'star', 'issue', 'watch', 'answer', 'likeRep' , 'notification']
+tableName = ['user','follow', 'repository', 'star', 'issue', 'watch', 'answer', 'likeRep' , 'notification']
 
 
 class DatabaseMiddleWare(object):
@@ -32,7 +32,7 @@ class DatabaseMiddleWare(object):
 
             'repository': "CREATE TABLE repository ("
                           "id int PRIMARY KEY AUTO_INCREMENT,"
-                          "repo_name VARCHAR (120) UNIQUE NOT NULL,"
+                          "repo_name VARCHAR (120) NOT NULL,"
                           "description VARCHAR (300),"
                           "is_private INT(1) DEFAULT 0,"
                           "is_forked INT(1) DEFAULT 0,"

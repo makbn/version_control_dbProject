@@ -82,6 +82,8 @@ class NewLoginWidget(QtGui.QWidget):
             print("db exception!")
         if retrieve is None:
             print("Username does not exist!")
+            frame = self.view.page().mainFrame()
+            frame.evaluateJavaScript('show();')
         else :
             retUser = str(retrieve['username']) #TODO : change the retrieving data according to the designed database. change to username
             retId = str(retrieve['id'])#TODO : change the retrieving data according to the designed database change to id

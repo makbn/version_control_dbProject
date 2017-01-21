@@ -3,12 +3,21 @@
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
-    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <link href="css/bootstrap.css" rel="stylesheet">
 </head>
 <body style="background-color:rgba(45,45,48,255)">
-<div class="container">
+
+<nav class="navbar navbar-default navbar-fixed-top">
+      <div class="container">
+        <div class="navbar-header">
+
+          <a class="navbar-brand" href="/hiii">Search</a>
+        </div>
+      </div>
+    </nav>
+<div class="container" style="margin-top: 63px">
     <form class="row" action="/search" class="search_repos" id="search_form">
-        <h2 style="color:whitesmoke">Search</h2>
+
         <div id="custom-search-input">
             <div class="input-group col-md-12">
                 <input id="SearchQuery" type="text" class="  search-query form-control" placeholder="Search"/>
@@ -31,27 +40,26 @@
                     <li class="list-group-item " style="margin-outside: 1px">
                         <span class="glyphicon glyphicon-tasks"></span>
                         <a href="/filterRepo">Repositories:</a>
-                        <span id="RepoCounter" style="float:right">10</span>
+                        <span id="RepoCounter" style="float:right">0</span>
                     </li>
 
                     <li class="list-group-item" style="margin-outside: 1px">
                         <span class="glyphicon glyphicon-pushpin"></span>
                         <a href="/filterIssue">Issues:</a>
-                        <span id="IssueCounter" style="float:right">10</span>
+                        <span id="IssueCounter" style="float:right">0</span>
                     </li>
 
                     <li class="list-group-item" style="margin-outside: 1px">
                         <span class="glyphicon glyphicon-user"></span>
                         <a href="/filterUser">Users:</a>
-                        <span id="UserCounter" style="float:right">120</span>
+                        <span id="UserCounter" style="float:right">0</span>
                     </li>
                 </ul>
             </nav>
         </div>
         <div class="col-xs-8 col-sm-8 col-md-8 well" style="padding: 10px ;float: right">
-            <div style="font-size: 30px ; color: rgba(29,185,84,255)">
+            <div style="font-size: 16px ; color: black">
                 Search Result :
-                <hr></hr>
             </div>
             <div id="SearchResultList" style="overflow-y: scroll ; overflow-x:hidden  ; height: 290px ;" class="well-lg well well-sm">
             </div>

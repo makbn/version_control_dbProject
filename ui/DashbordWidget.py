@@ -199,7 +199,7 @@ class DashboardWidget(QtGui.QWidget):
 
     def goToCreateRepo(self):
         CrtRepPage = CreateRepWidget.CreateRepWidget(self.WINDOW_PARENT)
-        SearchPage.BACK_WIDGET = "DashboardWidget"
+        CreateRepWidget.BACK_WIDGET = "DashboardWidget"
         self.WINDOW_PARENT.setCentralWidget(CrtRepPage)
 
     def goToRepoPage(self,id):
