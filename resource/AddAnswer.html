@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Bootstrap Example</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="css/bootstrap.css">
+
+</head>
+<body style="background-color:rgba(45,45,48,255);color: whitesmoke">
+
+<div class="container">
+  <p>The form below contains two input elements; one of type text and one of type password:</p>
+  <form>
+    <div class="form-group">
+      <label for="title">Title:</label>
+      <input type="text" class="form-control" id="title_field">
+    </div>
+     <div class="form-group">
+  <label for="answer">Answer:</label>
+  <textarea class="form-control" rows="5" id="answer_field"></textarea>
+</div>
+  </form>
+    <div class="col-xs-12 col-sm-12 col-md-12" style="background-color: white;border-radius: 4px;margin-top: 5px">
+        <div class="form-inline">
+
+            <a href="/answer"  onclick="add()" class="btn btn-success form-group col-md-2 col-xs-2 col-sm-2 glyphicon glyphicon-ok"
+                    style=" float: right;padding: 6px;margin: 8px">
+                Answer
+            </a>
+        </div>
+    </div>
+</div>
+<script src="js/jquery.js"></script>
+  <script src="js/bootstrap.js"></script>
+
+<p class="answer" id="answer" hidden>This paragraph should be hidden.</p>
+<p class="title" id="title" hidden>This paragraph should be hidden.</p>
+<script>
+        function add() {
+            var title = document.getElementById("title_field").value;
+            var answer = document.getElementById("answer_field").value;
+
+
+            document.getElementById("title").innerHTML = title;
+            document.getElementById("answer").innerHTML = answer;
+
+        }
+    </script>
+
+</body>
+</html>

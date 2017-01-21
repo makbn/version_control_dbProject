@@ -148,6 +148,19 @@ class DatabaseMiddleWare(object):
             "SELECT count(id) AS count FROM repository")
         record = cur.fetchall()
         return record
+    @staticmethod
+    def addAnswer(user_id,issue_id,title,answer):
+        print("sssss")
+        cur = DatabaseMiddleWare.dbRef.cursor(DatabaseMiddleWare.curType)
+        date = datetime.now()
+        query="INSERT INTO answer(user_id,issue_id,title,description,created_date) VALUES({user_id},{issue_id},'{title}','{answer}','{date}');".format(user_id=str(user_id),issue_id=str(issue_id),title=title,answer=answer,date=str(date)[:10])
+        print(query)
+        try:
+            cur.execute(query)
+            DatabaseMiddleWare.dbRef.commit()
+        except Exception as e:
+            print(str(e))
+
 
     @staticmethod
     def getStarCount(repID):
