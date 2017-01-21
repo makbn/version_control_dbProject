@@ -7,120 +7,47 @@
     <link href="css/semantic.css" rel="stylesheet">
     <link href="css/SlideMenu.css" rel="stylesheet">
     <link href="css/icon.css" rel="stylesheet">
-    <link href="css/bootstrap.css" rel="stylesheet">
+    <link href="css/createRep1.css" rel="stylesheet">
     <link href="css/userprofile_style.css" rel="stylesheet">
-    <script src="js/jquery.js"></script>
-    <script src="js/BigSlide.js"></script>
-    <script src="js/bootstrap.js"></script>
 
 
 </head>
-<body>
-<div class="container">
-    <div class="row profile">
-		<div class="col-md-3">
-			<div class="profile-sidebar">
-				<!-- SIDEBAR USERPIC -->
-				<div class="profile-userpic">
-					<img src="http://keenthemes.com/preview/metronic/theme/assets/admin/pages/media/profile/profile_user.jpg" class="img-responsive" alt="">
-				</div>
-				<!-- END SIDEBAR USERPIC -->
-				<!-- SIDEBAR USER TITLE -->
-				<div class="profile-usertitle">
-					<div id="namePlaceHolder" class="profile-usertitle-name">
-						Marcus Doe
-					</div>
-					<div id="usernamePlaceHolder" class="profile-usertitle-job">
-						Developer
-					</div>
-				</div>
-				<!-- END SIDEBAR USER TITLE -->
-				<!-- SIDEBAR BUTTONS -->
-				<div class="profile-userbuttons">
-					<button type="button" class="btn btn-success btn-sm">Follow</button>
-					<button type="button" class="btn btn-danger btn-sm">Message</button>
-				</div>
-				<!-- END SIDEBAR BUTTONS -->
-				<!-- SIDEBAR MENU -->
-				<div class="profile-usermenu">
-					<ul class="nav">
-						<li class="active">
-							<a href="#">
-							<i class="glyphicon glyphicon-home"></i>
-							Overview </a>
-						</li>
-						<li>
-							<a href="#">
-							<i class="glyphicon glyphicon-user"></i>
-							Account Settings </a>
-						</li>
-						<li>
-							<a href="#" target="_blank">
-							<i class="glyphicon glyphicon-ok"></i>
-							Tasks </a>
-						</li>
-						<li>
-							<a href="#">
-							<i class="glyphicon glyphicon-flag"></i>
-							Help </a>
-						</li>
-					</ul>
-				</div>
-				<!-- END MENU -->
-			</div>
-		</div>
-		<div class="col-md-9">
-            <div class="profile-content">
-			    <div class="ui relaxed divided list" id="repository_list" style="margin-top: 55px;margin-bottom: 20px;padding-bottom: 10px">
-    <div class="item">
-        <i class="large git square icon"></i>
-        <div class="content">
-            <a class="header">Semantic-Org/Semantic-UI</a>
-            <div class="description">Updated 10 mins ago</div>
-
-            <div style="display: flex; margin-top: 10px">
-                <div style="padding-left: 10px;display: block">
-                    <a class="ui orange label">Private</a>
-                </div>
-            </div>
-
+<body style="padding-right: -50px">
+<div class="cover-block user-cover-block">
+    <div class="cover-controls">
         </div>
-
-    </div>
-    <div class="item">
-        <i class="large git square icon"></i>
-        <div class="content container">
-            <a class="header">Semantic-Org/Semantic-UI-Docs</a>
-            <div class="description">Updated 22 mins ago</div>
-            <div class="row" style="display: flex; margin-top: 10px">
-                <div class = "col-xs-3" style="padding-left: 2px">
-                    <a class="ui green label">Public</a>
-                </div>
-                <div class = "col-xs-3" style="padding-left: 2px">
-                    <div class="ui label">
-                        <i class="star icon"></i> 23
-                    </div>
-                </div>
-
-                <div class = "col-xs-3" style="padding-left: 2px">
-                    <a class="ui blue label">makbn/Semantic...</a>
-                </div>
-
-
+    <div class="profile-header">
+        <div class="avatar-holder">
+            <a target="_blank"
+               href="https://secure.gravatar.com/avatar/7d9c0edf3bc49a2a2f8e59d009922259?s=800&amp;d=identicon"><img
+                    class="avatar s90" alt=""
+                    src="https://secure.gravatar.com/avatar/7d9c0edf3bc49a2a2f8e59d009922259?s=180&amp;d=identicon">
+            </a></div>
+        <div class="user-info">
+            <div id="fullName"class="cover-title">
+                {Full Name}
+            </div>
+            <div class="cover-desc member-date">
+            <span id="username" class="middle-dot-divider">@{username}</span><span class="middle-dot-divider">Member Since a long time ago </span>
+            </div>
+            <div class="cover-desc">
             </div>
         </div>
     </div>
-    <div class="item">
-        <i class="large git square icon"></i>
-        <div class="content">
-            <a class="header">Semantic-Org/Semantic-UI-Meteor</a>
-            <div class="description">Updated 34 mins ago</div>
-        </div>
-    </div>
+    <ul class="nav-links center user-profile-nav">
+        <li class="js-activity-tab active">
+            <a data-target="div#activity" data-action="activity" data-toggle="tab" href="/rza.ete"
+               aria-expanded="true">Public Repositories
+            </a></li>
+    </ul>
 </div>
-            </div>
-		</div>
-	</div>
-</div>
+
+<div class="ui relaxed divided list" id="repository_list" style="margin-top: 55px;margin-bottom: 20px;padding-bottom: 10px;margin-left: 16px;margin-right: 66px">
+    </div>
+
+ <script src="js/jquery.js"></script>
+    <script src="js/BigSlide.js"></script>
+    <script src="js/bootstrap.js"></script>
+
 </body>
 </html>

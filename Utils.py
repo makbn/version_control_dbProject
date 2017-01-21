@@ -1,6 +1,7 @@
 from models import  User
 
 
+
 class UIHelper:
     @staticmethod
     def backPressHandler(name,Parent=None):
@@ -8,13 +9,20 @@ class UIHelper:
         from ui import NewLogin
         from ui import RegisterPage
         from ui import DashbordWidget
+        from ui import SearchPage
+        from ui import ProfileWidget
         if name=="SplashWidget":
             return SplashWidget.SplashWidget(Parent)
         elif name=="NewLoginWidget":
             return NewLogin.NewLoginWidget(Parent)
         elif name=="RegisterPage":
             return RegisterPage.RegisterPage(Parent)
+        elif name=="SearchPage":
+            return SearchPage.SearchPage(Parent)
+        elif name=="ProfileWidget":
+            return ProfileWidget.ProfileWidget(Parent)
         else:
+            print(name+ "sth wrong")
             return DashbordWidget.DashboardWidget(Parent)
 class UserManager:
     current_user = None
