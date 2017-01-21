@@ -3,8 +3,8 @@ from datetime import datetime
 import pymysql
 
 hostname = "localhost"
-username = "dbProjectTester"
-password = "12341234"
+username = "root"
+password = "1234"
 databasename = "TESTDB"
 port = 330
 tableName = ['user','follow', 'repository', 'star', 'issue', 'watch', 'answer', 'likeRep' , 'notification']
@@ -338,6 +338,16 @@ class DatabaseMiddleWare(object):
                                                                                               UserId=userId)
         cur.execute(checkQuery)
         return cur.fetchone()
+
+    @staticmethod
+    def addIssue(title,desc,rep_id,user_id):
+        cur = DatabaseMiddleWare.dbRef.cursor(DatabaseMiddleWare.curType)
+        query= "INSERT INTO issue(title,description,rep_id,user_id) VALUES ('{title}','{desc}',{rep_id},{user_id});".format(title=title,desc=desc,rep_id=str(rep_id),user_id=str(user_id))
+        try:
+            cur.execute(query)
+            DatabaseMiddleWare.dbRef.commit()
+        except Exception as e:
+            print(str(e))
 
     @staticmethod
     def giveStarToRepository(repId , userId):
