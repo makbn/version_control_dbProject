@@ -114,6 +114,8 @@ class RepositoryPage(QtGui.QWidget):
             self.addAnswer()
         elif action.__contains__("doissue"):
             self.addIssue()
+        elif action.__contains__("doCommit"):
+            self.commit()
 
 
     def selectIssue(self,issue_id):
@@ -192,6 +194,10 @@ class RepositoryPage(QtGui.QWidget):
     def addIssue(self):
         ai=AddIssueForm(self,self.WINDOW_PARENT)
         ai.show()
+    def commit(self):
+        c=CommitForm(self,self.WINDOW_PARENT)
+        c.show()
+
 
 
 class AddAnswerForm(QDialog):
@@ -228,28 +234,7 @@ class AddAnswerForm(QDialog):
             except:
                 document.findAll("#Respond").at(0).setPlainText("Enter your email please")
     def addAnswer(self):
-        # correctColor = "lawngreen"
-        # notCorrectColor = "orange"
-        # outer = ""
-        # template = """<li class="list-group-item " style="margin-outside: 1px;margin-bottom : 3px">
-        #                             <span style="color: {Color}" class="glyphicon glyphicon-comment"></span>
-        #                             <a href="user-{UserId}">{Username}</a>
-        #                             <p class="IssueAnswer">{Answer}</p>
-        #                         </li>"""
-        #
-        # print("$$$" + self.answer)
-        # inner = template.format(Answer=self.answer,
-        #                             UserId=Utils.UserManager.getCurrentUser()['id'],
-        #                             Username=(Utils.UserManager.getCurrentUser()['first_name'] + " " + Utils.UserManager.getCurrentUser()['last_name']),
-        #                             Color=notCorrectColor)
-        # print("****" + inner)
-        # outer=self.main.page_document.findAll("#AnswerList").at(0).toPlainText()
-        # outer = outer + inner
-        # self.main.page_document.findAll("#AnswerList").at(0).setInnerXml(outer)
-        print("###" + self.main.issue_id)
-
         DatabaseMiddleWare.addAnswer(Utils.UserManager.getCurrentUser()["id"],self.main.issue_id,str(self.title),str(self.answer))
-        print("df")
         self.main.selectIssue(self.main.issue_id)
 
 class AddIssueForm(QDialog):
@@ -285,9 +270,45 @@ class AddIssueForm(QDialog):
                 print("exception "+str(e))
     def addIssue(self):
         DatabaseMiddleWare.addIssue(self.title,self.desc,self.main.repositoryId,Utils.UserManager.getCurrentUser()['id'])
-        print("issue added")
         allIssues = DatabaseMiddleWare.fetchIssuesForRepo(self.main.repositoryId)
         issueHtml = self.main.createIssueList(allIssues)
         self.main.page_document.findAll("#IssueList").at(0).setInnerXml(issueHtml)
+
+class CommitForm(QDialog):
+    def __init__(self, main,parent=None):
+        self.WINDOW_PARENT=parent
+        self.main=main
+        super(CommitForm, self).__init__(parent)
+        self.setWindowTitle("commit")
+        self.view=QWebView(self)
+        self.view.linkClicked.connect(self.handleLinkClicked)
+        self.page = self.view.page()
+        self.view.setMinimumSize(400, 400)
+        self.view.setMaximumSize(400, 400)
+        self.view.page().setLinkDelegationPolicy(
+            QtWebKit.QWebPage.DelegateAllLinks)
+        cwd = os.getcwd()
+        self.view.load(QUrl.fromLocalFile(os.path.join(cwd, "resource", "commit.html")))
+        self.WINDOW_PARENT.QApplicationRef.processEvents()
+        self.view.show()
+        self.setStyleSheet("border-width: 0px; border-style: solid")
+
+    def handleLinkClicked(self, url):
+        action=url.toString()
+        if action.__contains__("commit"):
+            frame = self.view.page().mainFrame()
+            document = frame.documentElement()
+            try:
+                self.title = document.findAll("#title").at(0).toPlainText()
+                self.desc = document.findAll("#desc").at(0).toPlainText()
+                self.commit(self.main.repositoryId,Utils.UserManager.getCurrentUser()['id'],self.title,self.desc)
+                self.close()
+            except Exception as e:
+                print("exception "+str(e))
+    def commit(self,rep_id,user_id,title,desc):
+        DatabaseMiddleWare.addCommit(rep_id,user_id,title,desc)
+
+
+
 
 

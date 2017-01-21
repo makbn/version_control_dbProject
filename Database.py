@@ -7,7 +7,7 @@ username = "root"
 password = "1234"
 databasename = "TESTDB"
 port = 330
-tableName = ['user','follow', 'repository', 'star', 'issue', 'watch', 'answer', 'likeRep' , 'notification']
+tableName = ['user','follow', 'commit','repository', 'star', 'issue', 'watch', 'answer', 'likeRep' , 'notification']
 
 
 class DatabaseMiddleWare(object):
@@ -103,7 +103,17 @@ class DatabaseMiddleWare(object):
                       follower_id INT NOT NULL CHECK (follower_id!=following_id),
                       FOREIGN KEY (following_id) REFERENCES user(id),
                       FOREIGN KEY (follower_id) REFERENCES user(id)
-                      );"""
+                      );""",
+            'commit' : """CREATE TABLE commit(
+            id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
+            repo_id INT NOT NULL ,
+            user_id INT NOT NULL ,
+            title VARCHAR (30) NOT NULL ,
+            decsription VARCHAR(200) ,
+            FOREIGN KEY (repo_id) REFERENCES repository(id),
+            FOREIGN KEY (user_id) REFERENCES user(id)
+            );"""
+
         }
 
         selectedQuery = switcher.get(tname, None)
@@ -265,6 +275,22 @@ class DatabaseMiddleWare(object):
                 return "wrong answer dude!"
         else:
             return "wrong question dude!"
+
+    @staticmethod
+    def getAllcommit(rep_id):
+        cur = DatabaseMiddleWare.dbRef.cursor(DatabaseMiddleWare.curType)
+        query="SELECT * from commit WHERE repo_id={rep_id};".format(rep_id=rep_id)
+        cur.execute(query)
+        return cur.fetchall()
+    @staticmethod
+    def addCommit(rep_id,user_id,title,desc):
+        cur = DatabaseMiddleWare.dbRef.cursor(DatabaseMiddleWare.curType)
+        query="INSERT INTO commit(repo_id,user_id,title,decsription) VALUES ({rep_id},{user_id},'{title}','{desc}');".format(rep_id=str(rep_id),title=title,desc=desc,user_id=str(user_id))
+        try:
+            cur.execute(query)
+            DatabaseMiddleWare.dbRef.commit()
+        except Exception as e:
+            print(str(e))
 
     @staticmethod
     def register(user):
