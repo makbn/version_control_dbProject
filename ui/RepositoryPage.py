@@ -63,9 +63,14 @@ class RepositoryPage(QtGui.QWidget):
     def fillTheDocument(self , document=None):
         self.MyRepo = DatabaseMiddleWare.fetchRepoDataById(self.repositoryId)[0]
         starCount = DatabaseMiddleWare.getStarCount(self.repositoryId)
+
         isForked = self.isForked(repId=self.MyRepo["id"],userId=Utils.UserManager.getCurrentUser()["id"])
-        if isForked == True : document.findAll("#ForkButton").at(0).setPlainText("Forked")
-        else : document.findAll("#ForkButton").at(0).setPlainText("Fork")
+
+        if isForked == True :
+            document.findAll("#ForkButton").at(0).setPlainText("Forked")
+        else :
+            document.findAll("#ForkButton").at(0).setPlainText("Fork")
+
         document.findAll("#RepositoryName").at(0).setPlainText(self.MyRepo["repo_name"])
         document.findAll("#StarCount").at(0).setPlainText(str(starCount["stars"]))
         document.findAll("#exampleTextarea").at(0).setPlainText(self.MyRepo["description"])
@@ -153,8 +158,11 @@ class RepositoryPage(QtGui.QWidget):
 
     def isForked(self,repId,userId):
         isForked = DatabaseMiddleWare.checkForked(repId=repId,userId=userId)
-        if isForked is not None : return False
-        else:return True
+
+        temp = None
+        if isForked is None : temp = False
+        else:temp= True
+        return temp
 
     def updateForked(self):
         self.page_document.findAll("#FrokButton").at(0).setPlainText("Forked")
