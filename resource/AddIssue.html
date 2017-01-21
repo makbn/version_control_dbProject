@@ -17,16 +17,16 @@
       <input type="text" class="form-control" id="title_field">
     </div>
      <div class="form-group">
-  <label for="answer">Answer:</label>
+  <label for="answer">Description:</label>
   <textarea class="form-control" rows="5" id="answer_field"></textarea>
 </div>
   </form>
     <div class="col-xs-12 col-sm-12 col-md-12" style="background-color: white;border-radius: 4px;margin-top: 5px">
         <div class="form-inline">
 
-            <a href="/answer"  onclick="add()" class="btn btn-success form-group col-md-2 col-xs-2 col-sm-2 glyphicon glyphicon-ok"
+            <a href="/issue"  onclick="add()" class="btn btn-success form-group col-md-2 col-xs-2 col-sm-2 glyphicon glyphicon-ok"
                     style=" float: right;padding: 6px;margin: 8px">
-                Answer
+                Add Issue
             </a>
         </div>
     </div>
@@ -34,7 +34,7 @@
 <script src="js/jquery.js"></script>
   <script src="js/bootstrap.js"></script>
 
-<p class="answer" id="answer" hidden>This paragraph should be hidden.</p>
+<p class="desc" id="desc" hidden>This paragraph should be hidden.</p>
 <p class="title" id="title" hidden>This paragraph should be hidden.</p>
 <script>
         function add() {
@@ -43,7 +43,7 @@
 
 
             document.getElementById("title").innerHTML = title;
-            document.getElementById("answer").innerHTML = answer;
+            document.getElementById("desc").innerHTML = answer;
 
         }
     </script>
